@@ -118,9 +118,27 @@ import time
 from sklearn.metrics import confusion_matrix, make_scorer
 from sklearn.model_selection import cross_validate
 
-# Costos por lote (USD). Reemplazar con los valores de la planta.
-COSTO_FN = 400.0   # lote con merma alta SIN clarificante: litros perdidos que se pudieron evitar
-COSTO_FP = 60.0    # lote normal CON clarificante: clarificante gastado sin necesidad
+# Costos de la planta
+PRECIO_LITRO = {   # USD por litro de cerveza, según el estilo
+    "American Lager": 0.427, "Oktoberfest": 0.427, "Lagarto": 0.540, "Red Llama": 0.509,
+    "Condor": 0.582, "Tortuga": 0.665, "Iguana": 0.738, "Belgian Tripel": 0.743, "Honey Bock": 0.786,
+}
+COSTO_CLARIF_LITRO = 57.12 / 4 * 0.5 / 1000   # USD/L: $57.12 por 4 kg, 0.5 kg por cada 1000 L
+META_MERMA = 0.05                             # con clarificante, la merma baja a la meta (5 %)
+
+
+def costos_por_lote(df):
+    """Costo de cada tipo de error para cada lote (USD)."""
+    exceso_litros = (df["merma_litros"] - META_MERMA * df["cantidad_planificada"]).clip(lower=0)
+    costo_fn = exceso_litros * df["estilo"].map(PRECIO_LITRO)          # merma alta sin clarificante
+    costo_fp = COSTO_CLARIF_LITRO * df["cantidad_planificada"]          # clarificante sin necesidad
+    return costo_fn, costo_fp
+
+
+# Costo promedio por lote en el entrenamiento (calculado en 03_baseline_candidatos con costos_por_lote)
+COSTO_FN = 108.07   # lote con merma alta SIN clarificante
+COSTO_FP = 36.80    # lote normal CON clarificante
+
 
 
 def costo_negocio(y_true, y_pred):
