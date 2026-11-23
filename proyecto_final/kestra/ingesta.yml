@@ -84,6 +84,34 @@ tasks:
       WHERE TRY_TO_DATE(fecha_coccion) >= DATEADD(week, -{{ vars.semanas_ventana }}, '{{ render(vars.fecha_corte) }}'::DATE)
         AND TRY_TO_DATE(fecha_coccion) <  '{{ render(vars.fecha_corte) }}'::DATE;
 
+  # Bronze → Silver → Gold con dbt, dentro del mismo flujo
+  - id: transformar_dbt
+    type: io.kestra.plugin.core.flow.WorkingDirectory
+    tasks:
+      - id: clonar_repo
+        type: io.kestra.plugin.git.Clone
+        url: https://github.com/0997801643/PROYECTO-DSC
+        branch: main
+        directory: repo
+
+      - id: dbt_build
+        type: io.kestra.plugin.scripts.shell.Commands
+        taskRunner:
+          type: io.kestra.plugin.scripts.runner.docker.Docker
+        containerImage: ghcr.io/dbt-labs/dbt-snowflake:1.9.latest
+        inputFiles:
+          rsa_key.p8: "{{ secret('SNOWFLAKE_PRIVATE_KEY') }}"
+        env:
+          SNOWFLAKE_ACCOUNT: "{{ envs.snowflake_account }}"
+          SNOWFLAKE_USER: "{{ envs.snowflake_user }}"
+          SNOWFLAKE_ROLE: "{{ envs.snowflake_role }}"
+          SNOWFLAKE_WAREHOUSE: "{{ envs.snowflake_warehouse }}"
+          SNOWFLAKE_DATABASE: "{{ envs.snowflake_database }}"
+          
+        commands:
+          - export SNOWFLAKE_PRIVATE_KEY_PATH="$PWD/rsa_key.p8"
+          - dbt build --project-dir repo/proyecto_final/dbt --profiles-dir repo/proyecto_final/dbt
+
 # Se ejecuta solo si alguna tarea falla después de agotar los reintentos.
 errors:
   - id: alerta_falla_ingesta
@@ -95,7 +123,7 @@ errors:
       Ejecución: {{ execution.id }}
       Inicio: {{ execution.startDate }}
       Revisar la pestaña Logs de esta ejecución en Kestra.
-      
+
 triggers:
   - id: quincenal
     type: io.kestra.plugin.core.trigger.Schedule
