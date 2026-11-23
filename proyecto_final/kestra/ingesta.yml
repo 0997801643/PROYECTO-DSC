@@ -84,6 +84,18 @@ tasks:
       WHERE TRY_TO_DATE(fecha_coccion) >= DATEADD(week, -{{ vars.semanas_ventana }}, '{{ render(vars.fecha_corte) }}'::DATE)
         AND TRY_TO_DATE(fecha_coccion) <  '{{ render(vars.fecha_corte) }}'::DATE;
 
+# Se ejecuta solo si alguna tarea falla después de agotar los reintentos.
+errors:
+  - id: alerta_falla_ingesta
+    type: io.kestra.plugin.core.log.Log
+    level: ERROR
+    message: |
+      FALLA EN LA INGESTA
+      Flujo: {{ flow.namespace }}.{{ flow.id }}
+      Ejecución: {{ execution.id }}
+      Inicio: {{ execution.startDate }}
+      Revisar la pestaña Logs de esta ejecución en Kestra.
+      
 triggers:
   - id: quincenal
     type: io.kestra.plugin.core.trigger.Schedule
