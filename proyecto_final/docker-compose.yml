@@ -75,7 +75,25 @@ services:
       - --packages
       - net.snowflake:spark-snowflake_2.12:3.0.0,net.snowflake:snowflake-jdbc:3.16.1
     command: ["build_obt.py"]
-    
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.17.2
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --artifacts-destination /mlflow/artifacts
+      --serve-artifacts
+      --host 0.0.0.0
+      --port 5000
+    ports:
+      - "5050:5000"
+    volumes:
+      - datos_mlflow:/mlflow
+    restart: unless-stopped    
 volumes:
   datos_postgres:
+    name: pset2_datos_postgres
   datos_kestra:
+    name: pset2_datos_kestra
+  datos_mlflow:
+    name: pset_3_datos_mlflow

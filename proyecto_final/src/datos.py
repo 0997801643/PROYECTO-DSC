@@ -2,7 +2,7 @@
 Carga de la OBT desde Snowflake y metadatos de los datos para MLflow.
 
 La primera vez se consulta Snowflake y se guarda un snapshot en
-pset_3/data/obt_snapshot.parquet. Las siguientes veces se lee el snapshot,
+proyecto_final/data/obt_snapshot.parquet. Las siguientes veces se lee el snapshot,
 así todos los notebooks usan exactamente los mismos datos (mismo hash).
 Para volver a consultar Snowflake: cargar_obt(forzar=True).
 """
@@ -13,13 +13,11 @@ from pathlib import Path
 import pandas as pd
 from dotenv import load_dotenv
 
-RAIZ_PSET3 = Path(__file__).resolve().parents[1]
-RAIZ_REPO = RAIZ_PSET3.parent
-load_dotenv(RAIZ_PSET3 / ".env")   # MLflow
-load_dotenv(RAIZ_REPO / ".env")    # Snowflake (el mismo del PSet 2)
+RAIZ = Path(__file__).resolve().parents[1]   # proyecto_final/
+load_dotenv(RAIZ / ".env")                    # Snowflake + MLflow
 
 TABLA_OBT = "CERVECERIA_DB.OBT.OBT_MERMA_LOTES"
-RUTA_SNAPSHOT = RAIZ_PSET3 / "data" / "obt_snapshot.parquet"
+RUTA_SNAPSHOT = RAIZ / "data" / "obt_snapshot.parquet"
 
 # Definición del target (negocio): merma > 5 % indica falla del proceso
 UMBRAL_MERMA_ALTA = 5.0
@@ -32,7 +30,7 @@ def _llave_privada():
 
     ruta = Path(os.environ["SNOWFLAKE_PRIVATE_KEY_PATH"])
     if not ruta.is_absolute():
-        ruta = RAIZ_REPO / ruta
+        ruta = RAIZ / ruta
     llave = serialization.load_pem_private_key(ruta.read_bytes(), password=None)
     return llave.private_bytes(
         encoding=serialization.Encoding.DER,

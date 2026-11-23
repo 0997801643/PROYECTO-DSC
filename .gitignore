@@ -1,7 +1,18 @@
-keys/
-.env
-.venv/
-dbt/target/
-dbt/logs/
-dbt/dbt_packages/
-dbt/.user.yml
+# Credenciales: nunca se suben
+**/.env
+**/keys/
+
+# Entornos de Python y cachés
+**/.venv/
+__pycache__/
+.ipynb_checkpoints/
+mlruns/
+
+# Configuración local de VS Code
+.vscode/
+
+# Archivos que genera dbt al correr
+proyecto_final/dbt/target/
+proyecto_final/dbt/logs/
+proyecto_final/dbt/dbt_packages/
+proyecto_final/dbt/.user.yml

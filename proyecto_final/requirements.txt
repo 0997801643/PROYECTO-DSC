@@ -9,7 +9,8 @@ optuna==4.1.0
 
 # Snowflake (autenticación con par de llaves, igual que el PSet 2)
 snowflake-connector-python[pandas]==3.12.3
-cryptography
+cryptography==44.0.3        # pyOpenSSL 22 + cryptography 46 rompe el conector
+pyOpenSSL==24.3.0
 python-dotenv==1.0.1
 
 # Gráficos y notebooks
