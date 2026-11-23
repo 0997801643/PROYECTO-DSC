@@ -1,15 +1,17 @@
 id: test_conexion_snowflake
 namespace: cerveceria.pset2
 
+# Credenciales tomadas de la configuración (.env: variables ENV_ y SECRET_),
+# no escritas en el flujo.
+
 tasks:
   - id: probar_conexion
     type: io.kestra.plugin.jdbc.snowflake.Query
-    url: "jdbc:snowflake://UMJGGTS-JU36093.snowflakecomputing.com"
-    username: PSET2_USER
+    url: "jdbc:snowflake://{{ envs.snowflake_account }}.snowflakecomputing.com"
+    username: "{{ envs.snowflake_user }}"
     privateKey: "{{ secret('SNOWFLAKE_PRIVATE_KEY') }}"
-    warehouse: PSET2_WH
-    database: CERVECERIA_DB
-    role: PSET2_ROLE
+    role: "{{ envs.snowflake_role }}"
+    warehouse: "{{ envs.snowflake_warehouse }}"
+    database: "{{ envs.snowflake_database }}"
     sql: SELECT CURRENT_USER(), CURRENT_ROLE(), CURRENT_WAREHOUSE()
     fetchType: FETCH_ONE
-    
