@@ -1,26 +1,28 @@
 id: ingesta_merma_raw
 namespace: cerveceria.pset2
 
+# Credenciales de Snowflake tomadas de la configuración (.env: variables ENV_ y SECRET_),
+# no escritas en el flujo.
+
 retry:
   type: constant
   interval: PT5M
   maxAttempts: 3
 
 variables:
-  url_fuente: https://raw.githubusercontent.com/0997801643/PSET2/main/data/fuente_merma_levadura_2026.csv
-  sf_url: "jdbc:snowflake://UMJGGTS-JU36093.snowflakecomputing.com"
+  url_fuente: https://raw.githubusercontent.com/0997801643/PROYECTO-DSC/main/proyecto_final/data/fuente_merma_levadura_2026.csv
   fecha_corte: "{{ (trigger.date ?? execution.startDate) | date('yyyy-MM-dd') }}"
   semanas_ventana: 6
 
 tasks:
   - id: crear_tablas
     type: io.kestra.plugin.jdbc.snowflake.Queries
-    url: "{{ vars.sf_url }}"
-    username: PSET2_USER
+    url: "jdbc:snowflake://{{ envs.snowflake_account }}.snowflakecomputing.com"
+    username: "{{ envs.snowflake_user }}"
     privateKey: "{{ secret('SNOWFLAKE_PRIVATE_KEY') }}"
-    warehouse: PSET2_WH
-    database: CERVECERIA_DB
-    role: PSET2_ROLE
+    role: "{{ envs.snowflake_role }}"
+    warehouse: "{{ envs.snowflake_warehouse }}"
+    database: "{{ envs.snowflake_database }}"
     sql: |
       CREATE TABLE IF NOT EXISTS RAW.MERMA_LEVADURA (
         numero_documento VARCHAR, lote VARCHAR, fecha_coccion VARCHAR, fecha_cierre VARCHAR,
@@ -42,25 +44,25 @@ tasks:
 
   - id: subir_a_stage
     type: io.kestra.plugin.jdbc.snowflake.Upload
-    url: "{{ vars.sf_url }}"
-    username: PSET2_USER
+    url: "jdbc:snowflake://{{ envs.snowflake_account }}.snowflakecomputing.com"
+    username: "{{ envs.snowflake_user }}"
     privateKey: "{{ secret('SNOWFLAKE_PRIVATE_KEY') }}"
-    warehouse: PSET2_WH
-    database: CERVECERIA_DB
-    role: PSET2_ROLE
+    role: "{{ envs.snowflake_role }}"
+    warehouse: "{{ envs.snowflake_warehouse }}"
+    database: "{{ envs.snowflake_database }}"
     from: "{{ outputs.descargar_csv.uri }}"
-    stageName: "@CERVECERIA_DB.RAW.STG_FUENTE"
+    stageName: "@{{ envs.snowflake_database }}.RAW.STG_FUENTE"
     prefix: merma
     fileName: fuente.csv
 
   - id: cargar_ventana
     type: io.kestra.plugin.jdbc.snowflake.Queries
-    url: "{{ vars.sf_url }}"
-    username: PSET2_USER
+    url: "jdbc:snowflake://{{ envs.snowflake_account }}.snowflakecomputing.com"
+    username: "{{ envs.snowflake_user }}"
     privateKey: "{{ secret('SNOWFLAKE_PRIVATE_KEY') }}"
-    warehouse: PSET2_WH
-    database: CERVECERIA_DB
-    role: PSET2_ROLE
+    role: "{{ envs.snowflake_role }}"
+    warehouse: "{{ envs.snowflake_warehouse }}"
+    database: "{{ envs.snowflake_database }}"
     sql: |
       TRUNCATE TABLE RAW.MERMA_LEVADURA_LANDING;
 
