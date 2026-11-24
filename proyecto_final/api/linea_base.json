@@ -1,0 +1,22 @@
+{
+  "regla": "clarificar los estilos con más merma histórica hasta 33% de los lotes (PSet 1)",
+  "estilos_alerta": [
+    "Belgian Tripel",
+    "Honey Bock",
+    "Iguana",
+    "Oktoberfest",
+    "Red Llama"
+  ],
+  "tasa_por_estilo": {
+    "Belgian Tripel": 1.0,
+    "Honey Bock": 1.0,
+    "Iguana": 0.8333,
+    "Oktoberfest": 0.7692,
+    "Red Llama": 0.7,
+    "American Lager": 0.6066,
+    "Condor": 0.5,
+    "Tortuga": 0.5,
+    "Lagarto": 0.0
+  },
+  "fraccion_lotes": 0.233
+}

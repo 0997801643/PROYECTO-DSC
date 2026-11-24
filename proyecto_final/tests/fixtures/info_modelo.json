@@ -1,0 +1,9 @@
+{
+  "nombre": "merma-cerveza-modelo",
+  "version": "1",
+  "run_id": "e96be0e9960b47bf836869be8483a3c8",
+  "umbral_decision": 0.6216021699681,
+  "umbral_pset3": 0.05,
+  "roc_auc_registrado": 0.5246913580246914,
+  "roc_auc_muestra": 0.5246913580246914
+}

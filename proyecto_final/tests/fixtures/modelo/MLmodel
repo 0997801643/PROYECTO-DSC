@@ -1,0 +1,29 @@
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.14
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.5.2
+mlflow_version: 2.17.2
+model_size_bytes: 4012
+model_uuid: 8c7df97dc9e944a9bb10764f7c4ecfdf
+signature:
+  inputs: '[{"type": "double", "name": "generacion_levadura", "required": false},
+    {"type": "double", "name": "n_cocciones", "required": true}, {"type": "integer",
+    "name": "coccion_mes", "required": true}, {"type": "integer", "name": "coccion_dia_semana",
+    "required": true}, {"type": "long", "name": "carga_planta_14d", "required": true},
+    {"type": "double", "name": "levadura_nueva", "required": false}, {"type": "double",
+    "name": "sin_generacion", "required": true}, {"type": "double", "name": "con_microscopio",
+    "required": true}, {"type": "double", "name": "temporada_alta", "required": true},
+    {"type": "string", "name": "cepa", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
+  params: null
+utc_time_created: '2026-11-24 00:44:42.000540'
