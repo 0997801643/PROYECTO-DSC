@@ -48,8 +48,49 @@ services:
     depends_on:
       - postgres
 
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v2.17.2
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --artifacts-destination /mlflow/artifacts
+      --serve-artifacts
+      --host 0.0.0.0
+      --port 5000
+    ports:
+      - "5050:5000"
+    volumes:
+      - datos_mlflow:/mlflow
+    restart: unless-stopped
+
+  # API de predicción (sección 2 del PSet 4)
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    image: api-merma:local
+    env_file: .env
+    environment:
+      MLFLOW_TRACKING_URI: http://mlflow:5000        # red interna de Docker
+      SNOWFLAKE_PRIVATE_KEY_PATH: /keys/rsa_key.p8
+      REGISTRAR_SNOWFLAKE: "1"                       # cada predicción va a la tabla PREDICCIONES
+      RUTA_REGISTROS: /app/registros
+      MODO_RESPALDO: "${MODO_RESPALDO:-0}"           # interruptor de respaldo (sección 8.4)
+    volumes:
+      - ./keys:/keys:ro
+      - ./registros:/app/registros
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mlflow
+
+  # dbt y Spark corren dentro del flujo de Kestra (ingesta.yml).
+  # Se dejan aquí, en el perfil "manual", solo para correrlos a mano si hace falta:
+  #   docker compose --profile manual run --rm dbt build
+  #   docker compose --profile manual run --rm spark
   dbt:
     image: ghcr.io/dbt-labs/dbt-snowflake:1.9.latest
+    profiles: ["manual"]
     env_file: .env
     working_dir: /usr/app
     environment:
@@ -58,8 +99,10 @@ services:
     volumes:
       - ./dbt:/usr/app
       - ./keys:/keys:ro
+
   spark:
     image: spark:3.5.1-python3
+    profiles: ["manual"]
     user: root
     env_file: .env
     working_dir: /opt/spark-apps
@@ -76,20 +119,6 @@ services:
       - net.snowflake:spark-snowflake_2.12:3.0.0,net.snowflake:snowflake-jdbc:3.16.1
     command: ["build_obt.py"]
 
-  mlflow:
-    image: ghcr.io/mlflow/mlflow:v2.17.2
-    command: >
-      mlflow server
-      --backend-store-uri sqlite:////mlflow/mlflow.db
-      --artifacts-destination /mlflow/artifacts
-      --serve-artifacts
-      --host 0.0.0.0
-      --port 5000
-    ports:
-      - "5050:5000"
-    volumes:
-      - datos_mlflow:/mlflow
-    restart: unless-stopped    
 volumes:
   datos_postgres:
     name: pset2_datos_postgres
