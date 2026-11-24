@@ -84,8 +84,8 @@ tasks:
       WHERE TRY_TO_DATE(fecha_coccion) >= DATEADD(week, -{{ vars.semanas_ventana }}, '{{ render(vars.fecha_corte) }}'::DATE)
         AND TRY_TO_DATE(fecha_coccion) <  '{{ render(vars.fecha_corte) }}'::DATE;
 
-  # Bronze → Silver → Gold con dbt, dentro del mismo flujo
-  - id: transformar_dbt
+  
+  - id: transformar
     type: io.kestra.plugin.core.flow.WorkingDirectory
     tasks:
       - id: clonar_repo
@@ -112,6 +112,23 @@ tasks:
           - export SNOWFLAKE_PRIVATE_KEY_PATH="$PWD/rsa_key.p8"
           - dbt build --project-dir repo/proyecto_final/dbt --profiles-dir repo/proyecto_final/dbt
 
+      - id: spark_obt
+        type: io.kestra.plugin.scripts.shell.Commands
+        taskRunner:
+          type: io.kestra.plugin.scripts.runner.docker.Docker
+          user: root
+        containerImage: spark:3.5.1-python3
+        inputFiles:
+          rsa_key.p8: "{{ secret('SNOWFLAKE_PRIVATE_KEY') }}"
+        env:
+          SNOWFLAKE_ACCOUNT: "{{ envs.snowflake_account }}"
+          SNOWFLAKE_USER: "{{ envs.snowflake_user }}"
+          SNOWFLAKE_ROLE: "{{ envs.snowflake_role }}"
+          SNOWFLAKE_WAREHOUSE: "{{ envs.snowflake_warehouse }}"
+          SNOWFLAKE_DATABASE: "{{ envs.snowflake_database }}"
+        commands:
+          - export SNOWFLAKE_PRIVATE_KEY_PATH="$PWD/rsa_key.p8"
+          - /opt/spark/bin/spark-submit --conf spark.jars.ivy=/tmp/.ivy2 --packages net.snowflake:spark-snowflake_2.12:3.0.0,net.snowflake:snowflake-jdbc:3.16.1 repo/proyecto_final/spark/build_obt.py
 # Se ejecuta solo si alguna tarea falla después de agotar los reintentos.
 errors:
   - id: alerta_falla_ingesta
