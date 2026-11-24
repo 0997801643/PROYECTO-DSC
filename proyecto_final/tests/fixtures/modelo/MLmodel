@@ -14,7 +14,7 @@ flavors:
     sklearn_version: 1.5.2
 mlflow_version: 2.17.2
 model_size_bytes: 4012
-model_uuid: 8c7df97dc9e944a9bb10764f7c4ecfdf
+model_uuid: fe77a53e5735497a9b826792e6621570
 signature:
   inputs: '[{"type": "double", "name": "generacion_levadura", "required": false},
     {"type": "double", "name": "n_cocciones", "required": true}, {"type": "integer",
@@ -26,4 +26,4 @@ signature:
     {"type": "string", "name": "cepa", "required": true}]'
   outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
   params: null
-utc_time_created: '2026-11-24 00:44:42.000540'
+utc_time_created: '2026-11-24 00:52:32.225562'
