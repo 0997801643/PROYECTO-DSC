@@ -23,13 +23,13 @@ Cada observación recibida en los PSets #1 a #3 y cada decisión que cambió res
 
 | # | Criterio (nota) | Observación | Qué cambié | Archivo(s) |
 |---|---|---|---|---|
-| 2.1 | Kestra (7) | Agregar un bloque de errores (`errors`). | | |
-| 2.2 | Kestra (7) | Integrar dbt y Spark en Kestra; hoy ambas etapas se ejecutan a mano. | | |
+| 2.1 | Kestra (7) | Agregar un bloque de errores (`errors`). | Se agregó el bloque `errors` con la tarea `alerta_falla_ingesta`, que registra en el log de Kestra (nivel ERROR) el flujo, la ejecución y la hora de inicio cuando una tarea falla después de agotar los 3 reintentos. Se probó provocando una falla (URL inexistente) y la alerta se disparó. | `kestra/ingesta.yml` |
+| 2.2 | Kestra (7) | Integrar dbt y Spark en Kestra; hoy ambas etapas se ejecutan a mano. | El flujo ahora corre de punta a punta: RAW → `dbt build` (Bronze, Silver, Gold y tests) → Spark (OBT). Una tarea `WorkingDirectory` clona el repositorio público y ejecuta dbt y Spark en contenedores Docker con las mismas imágenes del `docker-compose.yml`. Evidencia: 5 modelos y 28 tests en verde (PASS=33) y OBT de 221 filas validada. | `kestra/ingesta.yml` |
 | 2.3 | Calidad de datos (9) | Justificar por qué las dos mermas negativas se reemplazan por cero; antes, determinar qué representan esos valores. | | |
-| 2.4 | dbt (7) | Agregar tests que verifiquen las reglas de Silver, sobre todo la exclusión de órdenes abiertas y de productos sin levadura. | | |
+| 2.4 | dbt (7) | Agregar tests que verifiquen las reglas de Silver, sobre todo la exclusión de órdenes abiertas y de productos sin levadura. | Se agregaron 3 tests singulares, uno por regla de Silver: sin órdenes abiertas (fecha de cierre nula o completado ≤ 0), sin productos sin levadura (Platonic, Turbo + Guaraná o cepa nula) y sin errores de registro (completado > planificado). Los tests pasaron de 25 a 28, todos en verde. | `dbt/tests/assert_silver_sin_ordenes_abiertas.sql`, `dbt/tests/assert_silver_sin_productos_sin_levadura.sql`, `dbt/tests/assert_silver_sin_errores_de_registro.sql` |
 | 2.5 | Star schema (7.5) | Ampliar la justificación del modelo dimensional considerando tanques, cepas y generaciones de levadura. | | |
 | 2.6 | Spark y OBT (8.5) | Documentar mejor la conciliación antes de publicar la OBT. | | |
-| 2.7 | Infraestructura (8) | Quitar la referencia fija a la cuenta de Snowflake en los flows y pasarla a la configuración. | | |
+| 2.7 | Infraestructura (8) | Quitar la referencia fija a la cuenta de Snowflake en los flows y pasarla a la configuración. | La cuenta, el usuario, el rol, el warehouse y la base de datos se movieron al `.env` como variables `ENV_SNOWFLAKE_*`; los flujos las leen con `{{ envs.* }}` y la llave privada sigue como secreto (`SECRET_SNOWFLAKE_PRIVATE_KEY`). Ningún flujo tiene credenciales escritas. `.env.example` documenta las variables sin valores. | `kestra/ingesta.yml`, `kestra/test_conexion_snowflake.yml`, `.env.example` |
 | 2.8 | Documento técnico (6.5) | Eliminar los textos pendientes de la plantilla. | | |
 | 2.9 | Documento técnico (6.5) | Completar la arquitectura, comparar estrella vs. OBT y explicar qué cambiaría para usar streaming. | | |
 
@@ -50,4 +50,4 @@ _Pendiente: aún no se recibe la retroalimentación._
 | Métrica técnica | Recall (meta 80 %) y precisión (PSet #1) | ROC-AUC (PSet #3) | | |
 | Métrica de negocio | Merma promedio y litros perdidos por mes (PSet #1) | Costo de errores por lote (USD) (PSet #3) | | |
 | Período de datos | 6 meses (memo) / 2–3 años (pitch) (PSet #1) | Febrero–octubre 2026: el ERP solo tiene datos desde febrero | | |
-| Estructura del repo | `pset_2` en la raíz y `pset_3/` | Todo en `proyecto_final/` | | |
+| Estructura del repo | PSet 2 en la raíz y `pset_3/` en el repositorio `PSET2` | Todo en `proyecto_final/`, en el repositorio renombrado `PROYECTO-DSC` | El PSet 4 exige un solo proyecto en `proyecto_final/` con un solo `docker-compose.yml`. Se unieron los dos `docker-compose`, los dos `.env` y se conservaron los volúmenes existentes (Model Registry y flujos de Kestra). | Todo el repositorio; `docker-compose.yml`, `src/datos.py`, `.gitignore`, `kestra/ingesta.yml` (URL del CSV) |
