@@ -179,11 +179,15 @@ def guardar(con, filas, lotes):
             VARIABLE VARCHAR, VALOR FLOAT, UMBRAL FLOAT, ALERTA BOOLEAN, DETALLE VARCHAR)""")
     cur.execute(f"DELETE FROM {TABLA_MON} WHERE LOTE_SIMULACION IN ({','.join(map(str, lotes))})")
     ahora = datetime.now(timezone.utc).isoformat()
+    # Los números se envían redondeados y con tipo explícito (::FLOAT): en una inserción de muchas
+    # filas Snowflake deduce el tipo de la columna con la primera fila, y un entero ahí hacía fallar
+    # los decimales siguientes.
     cur.executemany(
-        f"INSERT INTO {TABLA_MON} VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        [(ahora, f["lote"], f["tipo"], f["metrica"], f["variable"],
-          None if f["valor"] is None or pd.isna(f["valor"]) else float(f["valor"]),
-          f["umbral"], bool(f["alerta"]), f["detalle"]) for f in filas])
+        f"INSERT INTO {TABLA_MON} VALUES (%s, %s, %s, %s, %s, %s::FLOAT, %s::FLOAT, %s, %s)",
+        [(ahora, int(f["lote"]), f["tipo"], f["metrica"], f["variable"],
+          None if f["valor"] is None or pd.isna(f["valor"]) else round(float(f["valor"]), 6),
+          None if f["umbral"] is None else float(f["umbral"]), bool(f["alerta"]), f["detalle"])
+         for f in filas])
 
 
 # ---------------------------------------------------------------------------

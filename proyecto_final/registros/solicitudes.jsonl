@@ -59,3 +59,9 @@
 {"timestamp": "2026-11-25T20:31:39.303478+00:00", "metodo": "POST", "ruta": "/predecir", "codigo": 200, "latencia_ms": 19.73}
 {"timestamp": "2026-11-25T20:31:39.820925+00:00", "metodo": "POST", "ruta": "/predecir", "codigo": 200, "latencia_ms": 27.83}
 {"timestamp": "2026-11-25T20:31:40.335003+00:00", "metodo": "POST", "ruta": "/predecir", "codigo": 200, "latencia_ms": 28.01}
+{"timestamp": "2026-11-25T21:13:34.387152+00:00", "metodo": "POST", "ruta": "/predecir", "codigo": 200, "latencia_ms": 2615.19}
+{"timestamp": "2026-11-25T21:13:34.531325+00:00", "metodo": "POST", "ruta": "/predecir", "codigo": 200, "latencia_ms": 63.36}
+{"timestamp": "2026-11-25T21:13:44.287374+00:00", "metodo": "POST", "ruta": "/predecir", "codigo": 200, "latencia_ms": 89.3}
+{"timestamp": "2026-11-25T21:13:45.090295+00:00", "metodo": "POST", "ruta": "/predecir", "codigo": 200, "latencia_ms": 22.27}
+{"timestamp": "2026-11-25T21:13:45.637712+00:00", "metodo": "POST", "ruta": "/predecir", "codigo": 200, "latencia_ms": 36.59}
+{"timestamp": "2026-11-25T21:13:46.149761+00:00", "metodo": "POST", "ruta": "/predecir", "codigo": 200, "latencia_ms": 21.72}
