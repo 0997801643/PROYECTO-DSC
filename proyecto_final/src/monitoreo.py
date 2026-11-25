@@ -42,6 +42,9 @@ TABLA_MON = "PRODUCCION.MONITOREO"
 
 NUMERICAS = ["generacion_levadura", "n_cocciones", "coccion_mes", "coccion_dia_semana", "carga_planta_14d"]
 CATEGORICAS = ["levadura_nueva", "sin_generacion", "con_microscopio", "temporada_alta", "cepa"]
+# Variables de calendario: en producción SIEMPRE llegan meses posteriores al entrenamiento, así que
+# su cambio de distribución es esperado. Se miden y se guardan, pero no disparan alerta.
+CALENDARIO = ["coccion_mes", "temporada_alta"]
 
 K_LOTES_SEMANA = 2          # presupuesto de clarificante (lotes por semana)
 RETRASO_ETIQUETAS = 2       # la merma real se conoce 2 semanas después de la cocción
@@ -71,6 +74,16 @@ META_MERMA = 0.05
 # ---------------------------------------------------------------------------
 # Pruebas de deriva
 # ---------------------------------------------------------------------------
+def _como_texto(serie):
+    """Normaliza categorías: 1, 1.0 y "1" deben ser la misma categoría (la referencia viene de un CSV
+    con decimales y la producción de un JSON con enteros)."""
+    serie = pd.Series(serie).dropna()
+    numeros = pd.to_numeric(serie, errors="coerce")
+    if numeros.notna().all():
+        return numeros.map(lambda x: f"{x:g}")
+    return serie.astype(str)
+
+
 def psi(ref, act, categorica, bins=10):
     """Population Stability Index: < 0,1 estable · 0,1–0,25 moderado · > 0,25 cambio importante."""
     ref, act = pd.Series(ref).dropna(), pd.Series(act).dropna()
@@ -81,9 +94,10 @@ def psi(ref, act, categorica, bins=10):
         if len(cortes) < 3:
             categorica = True                 # pocas categorías: se trata como categórica
     if categorica:
-        cats = sorted(set(ref.astype(str)) | set(act.astype(str)))
-        p = ref.astype(str).value_counts(normalize=True).reindex(cats, fill_value=0).values
-        q = act.astype(str).value_counts(normalize=True).reindex(cats, fill_value=0).values
+        ref, act = _como_texto(ref), _como_texto(act)
+        cats = sorted(set(ref) | set(act))
+        p = ref.value_counts(normalize=True).reindex(cats, fill_value=0).values
+        q = act.value_counts(normalize=True).reindex(cats, fill_value=0).values
     else:
         cortes[0], cortes[-1] = -np.inf, np.inf
         p = np.histogram(ref, cortes)[0] / len(ref)
@@ -98,7 +112,7 @@ def p_valor_ks(ref, act):
 
 
 def p_valor_chi2(ref, act):
-    ref, act = pd.Series(ref).dropna().astype(str), pd.Series(act).dropna().astype(str)
+    ref, act = _como_texto(ref), _como_texto(act)
     cats = sorted(set(ref) | set(act))
     tabla = np.array([ref.value_counts().reindex(cats, fill_value=0).values,
                       act.value_counts().reindex(cats, fill_value=0).values])
@@ -195,12 +209,17 @@ def metricas_lote(lote, pred, ref, sim, linea_base):
         valor_psi = psi(ref[v], act[v], categorica)
         p = p_valor_chi2(ref[v], act[v]) if categorica else p_valor_ks(ref[v], act[v])
         cambio = valor_psi > UMBRAL["psi"] and p < UMBRAL["p_valor"]
-        agregar("datos", "psi", valor_psi, UMBRAL["psi"], cambio, v,
-                f"p = {p:.4f}: cambio de distribución confirmado" if cambio else f"p = {p:.4f}")
+        if cambio and v in CALENDARIO:
+            agregar("datos", "psi", valor_psi, UMBRAL["psi"], False, v,
+                    f"p = {p:.4f}: cambio esperado (variable de calendario, no alerta)")
+        else:
+            agregar("datos", "psi", valor_psi, UMBRAL["psi"], cambio, v,
+                    f"p = {p:.4f}: cambio de distribución confirmado" if cambio else f"p = {p:.4f}")
         agregar("datos", "p_valor_chi2" if categorica else "p_valor_ks", p, UMBRAL["p_valor"], False, v)
         if not categorica:
             fuera = ((act[v] < ref[v].min()) | (act[v] > ref[v].max())).mean()
-            agregar("datos", "pct_fuera_rango", fuera, UMBRAL["fuera_rango"], fuera > UMBRAL["fuera_rango"], v,
+            agregar("datos", "pct_fuera_rango", fuera, UMBRAL["fuera_rango"],
+                    fuera > UMBRAL["fuera_rango"] and v not in CALENDARIO, v,
                     f"rango del entrenamiento [{ref[v].min():g}, {ref[v].max():g}]")
     nuevas = (~act["cepa"].isin(ref["cepa"].dropna().unique())).mean()
     agregar("datos", "pct_categoria_nueva", nuevas, UMBRAL["categoria_nueva"],

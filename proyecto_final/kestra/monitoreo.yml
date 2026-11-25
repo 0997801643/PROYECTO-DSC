@@ -1,0 +1,66 @@
+id: monitoreo
+namespace: cerveceria.pset2
+
+description: |
+  Monitoreo del modelo en producción (sección 6 del PSet 4).
+  Para cada lote de simulación calcula métricas de datos, modelo, desempeño (con la merma
+  real que llega con 2 semanas de retraso), sistema y negocio; las guarda en Snowflake
+  (PRODUCCION.MONITOREO) y, si alguna supera su umbral, dispara una alerta en el log.
+
+inputs:
+  - id: lotes
+    type: STRING
+    defaults: "todos"
+    description: 'Lotes a monitorear: "todos" o una lista separada por comas, por ejemplo "9,10"'
+
+tasks:
+  - id: monitorear
+    type: io.kestra.plugin.core.flow.WorkingDirectory
+    tasks:
+      - id: clonar_repo
+        type: io.kestra.plugin.git.Clone
+        url: https://github.com/0997801643/PROYECTO-DSC
+        branch: main
+        directory: repo
+
+      # Usa la misma imagen de la API: ya trae pandas, scipy, scikit-learn y el conector de Snowflake
+      - id: calcular_metricas
+        type: io.kestra.plugin.scripts.shell.Commands
+        taskRunner:
+          type: io.kestra.plugin.scripts.runner.docker.Docker
+        containerImage: api-merma:local
+        inputFiles:
+          rsa_key.p8: "{{ secret('SNOWFLAKE_PRIVATE_KEY') }}"
+        env:
+          SNOWFLAKE_ACCOUNT: "{{ envs.snowflake_account }}"
+          SNOWFLAKE_USER: "{{ envs.snowflake_user }}"
+          SNOWFLAKE_ROLE: "{{ envs.snowflake_role }}"
+          SNOWFLAKE_WAREHOUSE: "{{ envs.snowflake_warehouse }}"
+          SNOWFLAKE_DATABASE: "{{ envs.snowflake_database }}"
+        commands:
+          - export SNOWFLAKE_PRIVATE_KEY_PATH="$PWD/rsa_key.p8"
+          - python repo/proyecto_final/src/monitoreo.py --lotes "{{ inputs.lotes }}"
+
+  - id: revisar_alertas
+    type: io.kestra.plugin.core.flow.If
+    condition: "{{ outputs.calcular_metricas.vars.n_alertas > 0 }}"
+    then:
+      - id: alerta_monitoreo
+        type: io.kestra.plugin.core.log.Log
+        level: ERROR
+        message: |
+          ALERTA DE MONITOREO: {{ outputs.calcular_metricas.vars.n_alertas }} métricas superaron su umbral.
+          {{ outputs.calcular_metricas.vars.alertas }}
+          Detalle en Snowflake: SELECT * FROM PRODUCCION.MONITOREO WHERE ALERTA;
+    else:
+      - id: sin_alertas
+        type: io.kestra.plugin.core.log.Log
+        message: "Monitoreo sin alertas."
+
+errors:
+  - id: alerta_falla_monitoreo
+    type: io.kestra.plugin.core.log.Log
+    level: ERROR
+    message: |
+      FALLA EN EL MONITOREO
+      Ejecución: {{ execution.id }} | Lotes: {{ inputs.lotes }}
