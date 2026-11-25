@@ -84,6 +84,20 @@ services:
     depends_on:
       - mlflow
 
+  # Tablero de monitoreo (sección 6.2 del PSet 4): http://localhost:8501
+  tablero:
+    build:
+      context: .
+      dockerfile: monitoreo/Dockerfile
+    image: tablero-merma:local
+    env_file: .env
+    environment:
+      SNOWFLAKE_PRIVATE_KEY_PATH: /keys/rsa_key.p8
+    volumes:
+      - ./keys:/keys:ro
+    ports:
+      - "8501:8501"
+
   # dbt y Spark corren dentro del flujo de Kestra (ingesta.yml).
   # Se dejan aquí, en el perfil "manual", solo para correrlos a mano si hace falta:
   #   docker compose --profile manual run --rm dbt build

@@ -1,3 +1,5 @@
 *
 !api/
+!monitoreo/
 api/__pycache__/
+monitoreo/__pycache__/
