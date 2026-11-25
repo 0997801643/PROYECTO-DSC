@@ -1,0 +1,96 @@
+id: produccion_lotes
+namespace: cerveceria.pset2
+
+description: |
+  Simulación de producción (sección 5 del PSet 4), patrón batch.
+  Cada lote de simulación es una semana de cocción. Para cada lote, el flujo envía sus
+  lotes de cerveza a la API (/predecir); la API devuelve la decisión y registra cada
+  predicción en Snowflake (PRODUCCION.PREDICCIONES) con su número de lote de simulación.
+  El último lote es el de deriva inducida ("temporada alta extrema").
+
+inputs:
+  - id: lotes
+    type: STRING
+    defaults: "todos"
+    description: 'Lotes a enviar: "todos" o una lista separada por comas, por ejemplo "1,2,3"'
+  - id: api_url
+    type: STRING
+    defaults: "http://host.docker.internal:8000"
+    description: Dirección de la API vista desde los contenedores de Kestra
+
+variables:
+  url_lotes: https://raw.githubusercontent.com/0997801643/PROYECTO-DSC/main/proyecto_final/data/simulacion/lotes_simulacion.csv
+
+tasks:
+  - id: descargar_lotes
+    type: io.kestra.plugin.core.http.Download
+    uri: "{{ vars.url_lotes }}"
+
+  - id: enviar_a_la_api
+    type: io.kestra.plugin.scripts.python.Script
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+    containerImage: python:3.12-slim
+    inputFiles:
+      lotes.csv: "{{ outputs.descargar_lotes.uri }}"
+    env:
+      LOTES: "{{ inputs.lotes }}"
+      API_URL: "{{ inputs.api_url }}"
+    script: |
+      import csv, json, os, sys, urllib.error, urllib.request
+      from collections import defaultdict
+
+      URL = os.environ["API_URL"].rstrip("/") + "/predecir"
+      ENTEROS = ["coccion_mes", "coccion_dia_semana", "carga_planta_14d",
+                 "levadura_nueva", "sin_generacion", "con_microscopio", "temporada_alta"]
+      DECIMALES = ["generacion_levadura", "n_cocciones"]
+
+      def numero(valor, entero):
+          if valor in ("", "nan", "NaN", None):
+              return None                      # dato faltante -> null (lo imputa el pipeline)
+          x = float(valor)
+          return int(round(x)) if entero else x
+
+      with open("lotes.csv", encoding="utf-8") as f:
+          filas = list(csv.DictReader(f))
+      por_lote = defaultdict(list)
+      for fila in filas:
+          por_lote[int(fila["lote_simulacion"])].append(fila)
+
+      pedidos = os.environ["LOTES"].strip().lower()
+      lotes = sorted(por_lote) if pedidos == "todos" else [int(x) for x in pedidos.split(",")]
+
+      errores = 0
+      for lote in lotes:
+          aplicar, deriva = 0, por_lote[lote][0]["deriva"] == "1"
+          for fila in por_lote[lote]:
+              cuerpo = {"numero_documento": fila["numero_documento"], "estilo": fila["estilo"],
+                        "lote_simulacion": lote, "cepa": fila["cepa"]}
+              cuerpo.update({c: numero(fila[c], True) for c in ENTEROS})
+              cuerpo.update({c: numero(fila[c], False) for c in DECIMALES})
+              pedido = urllib.request.Request(URL, data=json.dumps(cuerpo).encode(),
+                                              headers={"Content-Type": "application/json"})
+              try:
+                  with urllib.request.urlopen(pedido, timeout=30) as r:
+                      resp = json.loads(r.read())
+                  aplicar += resp["decision"] == "aplicar_clarificante"
+              except urllib.error.HTTPError as e:
+                  errores += 1
+                  print(f"  ERROR lote {lote} orden {fila['numero_documento']}: {e.code} {e.read().decode()}")
+          print(f"Lote {lote:>2} | semana {por_lote[lote][0]['semana'][:10]} | "
+                f"{len(por_lote[lote])} lotes de cerveza | {aplicar} con clarificante"
+                + ("  <- DERIVA INDUCIDA" if deriva else ""))
+
+      if errores:
+          sys.exit(f"{errores} predicciones fallaron")
+      print("Todas las predicciones quedaron registradas en Snowflake (PRODUCCION.PREDICCIONES)")
+
+errors:
+  - id: alerta_falla_produccion
+    type: io.kestra.plugin.core.log.Log
+    level: ERROR
+    message: |
+      FALLA EN LA SIMULACIÓN DE PRODUCCIÓN
+      Ejecución: {{ execution.id }} | Lotes: {{ inputs.lotes }}
+      Revisar que la API esté encendida ({{ inputs.api_url }}/salud).
+      
