@@ -43,6 +43,7 @@ def _conectar():
             account=os.environ["SNOWFLAKE_ACCOUNT"], user=os.environ["SNOWFLAKE_USER"],
             role=os.environ["SNOWFLAKE_ROLE"], warehouse=os.environ["SNOWFLAKE_WAREHOUSE"],
             database=os.environ["SNOWFLAKE_DATABASE"], private_key=_llave_privada(),
+            client_session_keep_alive=True,   # evita que la sesión expire si la API pasa horas sin predecir
         )
         esquema = TABLA.split(".")[0]
         cur = _conexion.cursor()
@@ -58,17 +59,20 @@ def _conectar():
 
 
 def _insertar_snowflake(fila):
+    """Inserta la predicción. Si falla (por ejemplo, sesión expirada), reconecta y reintenta una vez."""
     global _conexion
-    try:
-        with _lock:
-            _conectar().cursor().execute(
-                f"""INSERT INTO {TABLA} SELECT %s, %s, %s, %s, PARSE_JSON(%s), %s, %s, %s, %s, %s, %s, %s, %s""",
-                (fila["id_prediccion"], fila["timestamp"], fila["numero_documento"], fila["lote_simulacion"],
-                 json.dumps(fila["entradas"]), fila["probabilidad"], fila["decision"], fila["version_modelo"],
-                 fila["run_id"], fila["umbral"], fila["respaldo"], fila["motivo_respaldo"], fila["latencia_ms"]))
-    except Exception as e:   # el registro nunca debe tumbar la API: queda en el JSONL
-        log.warning("No se pudo registrar en Snowflake: %s", e)
-        _conexion = None
+    sql = f"""INSERT INTO {TABLA} SELECT %s, %s, %s, %s, PARSE_JSON(%s), %s, %s, %s, %s, %s, %s, %s, %s"""
+    valores = (fila["id_prediccion"], fila["timestamp"], fila["numero_documento"], fila["lote_simulacion"],
+               json.dumps(fila["entradas"]), fila["probabilidad"], fila["decision"], fila["version_modelo"],
+               fila["run_id"], fila["umbral"], fila["respaldo"], fila["motivo_respaldo"], fila["latencia_ms"])
+    for intento in (1, 2):
+        try:
+            with _lock:
+                _conectar().cursor().execute(sql, valores)
+            return
+        except Exception as e:   # el registro nunca debe tumbar la API: queda en el JSONL
+            _conexion = None     # se descarta la conexión; el siguiente intento abre una nueva
+            log.warning("No se pudo registrar en Snowflake (intento %d de 2): %s", intento, e)
 
 
 def prediccion(resp, entradas):
@@ -80,4 +84,3 @@ def prediccion(resp, entradas):
 
 def solicitud(fila):
     _escribir_jsonl("solicitudes.jsonl", fila)
-    
