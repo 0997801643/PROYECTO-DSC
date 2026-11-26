@@ -1,0 +1,143 @@
+id: reentrenamiento
+namespace: cerveceria.pset2
+
+description: |
+  Reentrenamiento con aprobación humana (sección 7 del PSet 4).
+  1. Entrena un challenger con los datos más recientes de la OBT (mismo pipeline y mismos
+     hiperparámetros del champion) y lo compara con el champion en las últimas semanas con etiqueta.
+  2. Se PAUSA y espera que una persona revise la comparación y decida (botón Resume).
+  3. Si la decisión es "promover": el challenger pasa a @champion, el champion anterior queda en
+     @anterior (para el rollback) y la API recarga el modelo.
+
+inputs:
+  - id: semanas_evaluacion
+    type: INT
+    defaults: 6
+    description: Últimas semanas con etiqueta que se usan para comparar champion y challenger
+
+tasks:
+  - id: entrenar
+    type: io.kestra.plugin.core.flow.WorkingDirectory
+    tasks:
+      - id: clonar_repo
+        type: io.kestra.plugin.git.Clone
+        url: https://github.com/0997801643/PROYECTO-DSC
+        branch: main
+        directory: repo
+
+      # Misma imagen de la API: mismas versiones de scikit-learn, pandas y MLflow que en producción
+      - id: entrenar_challenger
+        type: io.kestra.plugin.scripts.shell.Commands
+        taskRunner:
+          type: io.kestra.plugin.scripts.runner.docker.Docker
+        containerImage: api-merma:local
+        inputFiles:
+          rsa_key.p8: "{{ secret('SNOWFLAKE_PRIVATE_KEY') }}"
+        env:
+          SNOWFLAKE_ACCOUNT: "{{ envs.snowflake_account }}"
+          SNOWFLAKE_USER: "{{ envs.snowflake_user }}"
+          SNOWFLAKE_ROLE: "{{ envs.snowflake_role }}"
+          SNOWFLAKE_WAREHOUSE: "{{ envs.snowflake_warehouse }}"
+          SNOWFLAKE_DATABASE: "{{ envs.snowflake_database }}"
+          MLFLOW_TRACKING_URI: http://host.docker.internal:5050
+          MLFLOW_EXPERIMENT: merma-cerveza
+        commands:
+          - export SNOWFLAKE_PRIVATE_KEY_PATH="$PWD/rsa_key.p8"
+          - cd repo/proyecto_final
+          - python -m src.reentrenar --semanas-evaluacion {{ inputs.semanas_evaluacion }}
+
+  - id: resumen
+    type: io.kestra.plugin.core.log.Log
+    message: |
+      CHALLENGER LISTO PARA REVISIÓN
+      Champion: versión {{ outputs.entrenar_challenger.vars.champion_version }}
+      Challenger: versión {{ outputs.entrenar_challenger.vars.challenger_version }}
+      {{ outputs.entrenar_challenger.vars.comparacion }}
+      Recomendación automática: {{ outputs.entrenar_challenger.vars.recomendacion }}
+      ({{ outputs.entrenar_challenger.vars.motivo }})
+      Revisa también la corrida en MLflow (http://localhost:5050) y luego decide con el botón Resume.
+
+  # Aprobación humana: el flujo se detiene aquí hasta que alguien presione Resume y elija
+  - id: aprobacion
+    type: io.kestra.plugin.core.flow.Pause
+    onResume:
+      - id: decision
+        type: SELECT
+        values:
+          - rechazar
+          - promover
+        defaults: rechazar
+        description: ¿Promover el challenger a champion?
+      - id: responsable
+        type: STRING
+        defaults: sin nombre
+        description: Quién aprueba o rechaza
+
+  - id: aplicar_decision
+    type: io.kestra.plugin.core.flow.If
+    condition: "{{ outputs.aprobacion.onResume.decision == 'promover' }}"
+    then:
+      - id: promover
+        type: io.kestra.plugin.scripts.python.Script
+        taskRunner:
+          type: io.kestra.plugin.scripts.runner.docker.Docker
+        containerImage: api-merma:local
+        env:
+          MLFLOW_TRACKING_URI: http://host.docker.internal:5050
+          NUEVA: "{{ outputs.entrenar_challenger.vars.challenger_version }}"
+          RESPONSABLE: "{{ outputs.aprobacion.onResume.responsable }}"
+        script: |
+          import os
+          from datetime import datetime, timezone
+          from mlflow import MlflowClient
+
+          nombre = "merma-cerveza-modelo"
+          client = MlflowClient()
+          anterior = client.get_model_version_by_alias(nombre, "champion").version
+          nueva = os.environ["NUEVA"]
+
+          client.set_registered_model_alias(nombre, "anterior", anterior)   # para el rollback
+          client.set_registered_model_alias(nombre, "champion", nueva)
+          client.delete_registered_model_alias(nombre, "challenger")
+          client.set_model_version_tag(nombre, nueva, "aprobado_por", os.environ["RESPONSABLE"])
+          client.set_model_version_tag(nombre, nueva, "fecha_promocion",
+                                       datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))
+          print(f"Promovido: versión {nueva} ahora es @champion; versión {anterior} queda en @anterior")
+
+      # La API revisa el alias cada 30 s; con esto el cambio es inmediato
+      - id: recargar_api
+        type: io.kestra.plugin.core.http.Request
+        uri: http://api:8000/recargar
+        method: POST
+        allowFailure: true
+
+      - id: promovido
+        type: io.kestra.plugin.core.log.Log
+        message: |
+          PROMOVIDO por {{ outputs.aprobacion.onResume.responsable }}:
+          versión {{ outputs.entrenar_challenger.vars.challenger_version }} es el nuevo @champion.
+          Compruébalo en http://localhost:8000/modelo (la API también recarga sola cada 30 s).
+          Para volver atrás: ejecutar el flujo rollback_modelo.
+    else:
+      - id: rechazado
+        type: io.kestra.plugin.core.log.Log
+        message: |
+          RECHAZADO por {{ outputs.aprobacion.onResume.responsable }}: el champion
+          (versión {{ outputs.entrenar_challenger.vars.champion_version }}) sigue en producción.
+          El challenger (versión {{ outputs.entrenar_challenger.vars.challenger_version }}) queda
+          registrado en MLflow con el alias @challenger.
+
+errors:
+  - id: alerta_falla_reentrenamiento
+    type: io.kestra.plugin.core.log.Log
+    level: ERROR
+    message: |
+      FALLA EN EL REENTRENAMIENTO
+      Ejecución: {{ execution.id }}
+      El champion actual NO cambió.
+
+# Cada mes, el día 2 (después de la ingesta del día 1, que trae las etiquetas nuevas)
+triggers:
+  - id: mensual
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 7 2 * *"

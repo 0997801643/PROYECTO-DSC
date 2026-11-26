@@ -1,0 +1,72 @@
+id: rollback_modelo
+namespace: cerveceria.pset2
+
+description: |
+  Rollback del modelo (sección 7 del PSet 4).
+  Devuelve @champion a una versión anterior SIN reentrenar ni reconstruir la imagen: solo se mueve
+  el alias en el Model Registry de MLflow y la API recarga el modelo.
+  - versión = "anterior": vuelve a la versión guardada en @anterior (la que había antes de la última
+    promoción). La versión que sale de producción queda en @anterior, así el rollback se puede deshacer.
+  - versión = un número (por ejemplo "1"): pone esa versión como @champion.
+
+inputs:
+  - id: version
+    type: STRING
+    defaults: anterior
+    description: '"anterior" o el número de versión que debe volver a ser champion'
+  - id: motivo
+    type: STRING
+    defaults: rollback manual
+    description: Por qué se hace el rollback (queda como tag en MLflow)
+
+tasks:
+  - id: mover_alias
+    type: io.kestra.plugin.scripts.python.Script
+    taskRunner:
+      type: io.kestra.plugin.scripts.runner.docker.Docker
+    containerImage: api-merma:local
+    env:
+      MLFLOW_TRACKING_URI: http://host.docker.internal:5050
+      VERSION: "{{ inputs.version }}"
+      MOTIVO: "{{ inputs.motivo }}"
+    script: |
+      import json
+      import os
+      from mlflow import MlflowClient
+
+      nombre = "merma-cerveza-modelo"
+      client = MlflowClient()
+      actual = client.get_model_version_by_alias(nombre, "champion").version
+      pedida = os.environ["VERSION"].strip()
+      destino = client.get_model_version_by_alias(nombre, "anterior").version if pedida == "anterior" else pedida
+      client.get_model_version(nombre, destino)          # falla si esa versión no existe
+
+      if str(destino) == str(actual):
+          print(f"La versión {destino} ya es el champion: no hay nada que hacer")
+      else:
+          client.set_registered_model_alias(nombre, "champion", destino)
+          client.set_registered_model_alias(nombre, "anterior", actual)
+          client.set_model_version_tag(nombre, actual, "rollback", os.environ["MOTIVO"])
+          print(f"Rollback: @champion pasa de la versión {actual} a la versión {destino}")
+      print("::" + json.dumps({"outputs": {"antes": str(actual), "ahora": str(destino)}}) + "::")
+
+  - id: recargar_api
+    type: io.kestra.plugin.core.http.Request
+    uri: http://api:8000/recargar
+    method: POST
+    allowFailure: true
+
+  - id: listo
+    type: io.kestra.plugin.core.log.Log
+    message: |
+      ROLLBACK: el champion pasó de la versión {{ outputs.mover_alias.vars.antes }}
+      a la versión {{ outputs.mover_alias.vars.ahora }} (motivo: {{ inputs.motivo }}).
+      Compruébalo en http://localhost:8000/modelo
+
+errors:
+  - id: alerta_falla_rollback
+    type: io.kestra.plugin.core.log.Log
+    level: ERROR
+    message: |
+      FALLA EN EL ROLLBACK (ejecución {{ execution.id }}). Revisa que exista el alias @anterior
+      o la versión pedida ({{ inputs.version }}) en MLflow.

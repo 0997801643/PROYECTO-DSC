@@ -1,0 +1,56 @@
+# Entrega continua: cuando el CI termina bien en main, publica las imágenes Docker en
+# GitHub Container Registry (ghcr.io). Si el CI falla, no se publica nada.
+#
+# Imágenes:
+#   ghcr.io/0997801643/api-merma:latest      y  :<commit>
+#   ghcr.io/0997801643/tablero-merma:latest  y  :<commit>
+#
+# El modelo NO va dentro de la imagen: la API lo descarga del Model Registry (@champion).
+# Por eso un reentrenamiento o un rollback no necesitan reconstruir la imagen.
+name: CD
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publicar:
+    name: Publicar imágenes en GHCR
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - imagen: api-merma
+            dockerfile: proyecto_final/api/Dockerfile
+          - imagen: tablero-merma
+            dockerfile: proyecto_final/monitoreo/Dockerfile
+
+    steps:
+      - name: Descargar el mismo commit que pasó el CI
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Iniciar sesión en GHCR (con el token automático de GitHub, sin contraseñas)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Construir y publicar ${{ matrix.imagen }}
+        uses: docker/build-push-action@v6
+        with:
+          context: proyecto_final
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: |
+            ghcr.io/0997801643/${{ matrix.imagen }}:latest
+            ghcr.io/0997801643/${{ matrix.imagen }}:${{ github.event.workflow_run.head_sha }}
