@@ -1,208 +1,114 @@
-# PSet 2 · Pipeline de datos end-to-end: merma de cerveza por levadura
+# Proyecto final · Predicción de merma alta en lotes de cerveza
 
-Pipeline ELT reproducible que lleva los datos de producción de una cervecería hasta Snowflake, listos para entrenar un modelo que prediga la **merma de filtración y levadura** de cada lote.
+Predice, el día de la cocción, si un lote tendrá **merma de filtración mayor al 5 %**, para decidir a qué lotes aplicar clarificante con un presupuesto de **2 lotes por semana**.
 
-```
-GitHub (CSV) → Kestra → RAW → dbt → BRONZE → dbt → SILVER → dbt → GOLD → Spark → OBT
-```
-
-| Capa | Esquema Snowflake | Herramienta | Contenido |
-|---|---|---|---|
-| Raw | `RAW` | Kestra | `MERMA_LEVADURA`: datos tal como llegan (todo texto) + metadatos de carga |
-| Bronze | `BRONZE` | dbt (`models/staging`) | `STG_MERMA_LEVADURA`: tipos de datos correctos, sin quitar filas |
-| Silver | `SILVER` | dbt (`models/intermedia`) | `INT_MERMA_LIMPIA`: limpieza, banderas de calidad y merma calculada |
-| Gold | `GOLD` | dbt (`models/marts`) | Esquema estrella: `FCT_LOTES`, `DIM_ESTILO`, `DIM_FECHA` |
-| OBT | `OBT` | Spark | `OBT_MERMA_LOTES`: una fila por orden con todas sus dimensiones |
-
----
-
-## Estructura del repositorio
+Proyecto end to end del curso *Fundamentos de Ciencia de Datos: End to End* (PSets 1 a 4).
+Documento técnico, presentación y video: ver la entrega del PSet 4.
 
 ```
-pset_2/
-├── docker-compose.yml        # Postgres + Kestra + dbt + Spark
-├── .env.example              # variables necesarias (sin valores secretos)
-├── data/
-│   └── fuente_merma_levadura_2026.csv   # fuente del pipeline
+SAP (CSV) → Kestra → RAW → dbt (Bronze → Silver → Gold) → Spark (OBT)
+         → notebooks + src/ → MLflow (Model Registry @champion)
+         → API FastAPI → PREDICCIONES → monitoreo + alertas → tablero
+         → reentrenamiento con aprobación humana → @champion
+```
+
+## Estructura
+
+```
+proyecto_final/
+├── docker-compose.yml        # Postgres, Kestra, MLflow, API, tablero (+ dbt y Spark en el perfil "manual")
+├── .env.example              # variables necesarias, sin valores
+├── requirements.txt          # entorno local (notebooks y scripts)
+├── api/                      # servicio de predicción (FastAPI + Dockerfile)
+├── monitoreo/                # tablero Streamlit (+ Dockerfile)
 ├── kestra/
-│   ├── test_conexion_snowflake.yml      # prueba de conexión
-│   └── ingesta_merma_raw.yml            # ingesta quincenal a RAW
-├── dbt/
-│   ├── dbt_project.yml
-│   ├── profiles.yml          # conexión a Snowflake (lee todo del .env)
-│   ├── macros/generate_schema_name.sql
-│   ├── models/
-│   │   ├── staging/          # BRONZE
-│   │   ├── intermedia/       # SILVER
-│   │   └── marts/            # GOLD (esquema estrella)
-│   └── tests/                # tests de reglas de negocio
-├── spark/
-│   └── build_obt.py          # construye y valida la OBT
-└── docs/
-    ├── snowflake_setup.sql   # crea warehouse, base, esquemas, rol y usuario
-    └── perfil_calidad.sql    # métricas de calidad de datos
+│   ├── ingesta.yml           # fuente → RAW → dbt → Spark (días 1 y 15)
+│   ├── produccion_lotes.yml  # simulación: envía cada lote semanal a la API
+│   ├── monitoreo.yml         # métricas → PRODUCCION.MONITOREO + alertas
+│   ├── reentrenamiento.yml   # challenger + pausa de aprobación + promoción
+│   ├── rollback_modelo.yml   # vuelve @champion a la versión anterior
+│   └── test_conexion_snowflake.yml
+├── dbt/                      # Bronze, Silver, Gold y tests
+├── spark/build_obt.py        # construye y valida la OBT
+├── notebooks/                # EDA, features, candidatos, tuning, selección (PSet 3)
+├── src/
+│   ├── datos.py, pipeline.py           # carga de la OBT y Pipeline de scikit-learn
+│   ├── preparar_api.py                 # umbral k = 2, línea base y fixtures de CI
+│   ├── preparar_simulacion.py          # 9 lotes semanales + 1 lote con deriva
+│   ├── monitoreo.py                    # métricas de datos, modelo, desempeño, sistema y negocio
+│   ├── reentrenar.py                   # challenger, comparación y regla de promoción
+│   ├── valor_negocio.py, analisis_final.py   # cifras de las secciones 8 y 9
+├── tests/                    # pytest (contrato, modelo, negocio, respaldo)
+├── data/                     # fuente CSV, snapshot de la OBT, lotes de simulación
+└── docs/                     # cambios.md, memos anteriores, SQL de calidad, figuras
 ```
-
----
+CI y CD viven en la raíz del repositorio: `.github/workflows/ci.yml` y `cd.yml`.
 
 ## Requisitos
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (asignar al menos 6 GB de memoria)
-- Git y OpenSSL
-- Una cuenta de Snowflake con rol `ACCOUNTADMIN`
+- Docker Desktop (mínimo ~4,5 GB de memoria asignada).
+- Python 3.12 con un entorno virtual (`uv venv` o `python -m venv .venv`).
+- Una cuenta de Snowflake con autenticación por llave (par RSA).
 
----
+## Reproducir desde cero
 
-## 1. Configuración inicial (una sola vez)
+Todos los comandos se corren desde `proyecto_final/`.
 
-### 1.1 Clonar el repositorio
-
+**0. Configuración**
 ```bash
-git clone https://github.com/0997801643/PSET2.git
-cd PSET2
+cp .env.example .env            # completar las variables de Snowflake
+mkdir keys                      # copiar aquí rsa_key.p8 (no se sube a GitHub)
+uv pip install -r requirements.txt
 ```
+Ejecutar `docs/snowflake_setup.sql` en Snowflake (base de datos, esquemas, rol).
 
-### 1.2 Generar el par de llaves
-
-Snowflake no permite que un usuario de servicio se conecte con contraseña, así que el pipeline usa autenticación por par de llaves. La carpeta `keys/` está en `.gitignore` y nunca se sube al repositorio.
-
+**1. Levantar la infraestructura**
 ```bash
-mkdir keys
-openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -out keys/rsa_key.p8 -nocrypt
-openssl rsa -in keys/rsa_key.p8 -pubout -out keys/rsa_key.pub
-```
-
-### 1.3 Preparar Snowflake
-
-1. Abrir `docs/snowflake_setup.sql` en una hoja SQL de Snowsight con el rol `ACCOUNTADMIN`.
-2. Reemplazar `PEGA_AQUI_TU_LLAVE_PUBLICA` por el contenido de `keys/rsa_key.pub`, sin las líneas `BEGIN`/`END` y en una sola línea.
-3. Reemplazar el nombre de usuario personal en el último `GRANT`.
-4. Ejecutar todo el script (**Run All**).
-
-Esto crea el warehouse `PSET2_WH`, la base `CERVECERIA_DB`, los esquemas `RAW`, `BRONZE`, `SILVER`, `GOLD` y `OBT`, el rol `PSET2_ROLE` y el usuario de servicio `PSET2_USER`.
-
-### 1.4 Crear el archivo `.env`
-
-```bash
-cp .env.example .env
-```
-
-Completar `SNOWFLAKE_ACCOUNT` con el identificador de la cuenta (formato `ORGNAME-ACCOUNTNAME`; en Snowsight: menú de usuario → *Account* → *View account details*). Luego agregar la llave privada como secreto de Kestra (codificada en base64):
-
-```bash
-echo "SECRET_SNOWFLAKE_PRIVATE_KEY=$(base64 -i keys/rsa_key.p8 | tr -d '\n')" >> .env
-```
-
-> En Linux, usar `base64 -w0 keys/rsa_key.p8` en lugar de `base64 -i keys/rsa_key.p8 | tr -d '\n'`.
-
----
-
-## 2. Levantar la infraestructura
-
-```bash
+docker build -f api/Dockerfile -t api-merma:local .
+docker build -f monitoreo/Dockerfile -t tablero-merma:local .
 docker compose up -d
 ```
+Kestra: http://localhost:8080 · MLflow: http://localhost:5050 · API: http://localhost:8000/docs · Tablero: http://localhost:8501
 
-Esto levanta Postgres y Kestra. dbt y Spark no quedan encendidos: se ejecutan como trabajos puntuales (ver pasos 4 y 5).
+Las imágenes también se publican en GHCR en cada push a `main` con CI en verde:
+`ghcr.io/0997801643/api-merma:<commit>` y `ghcr.io/0997801643/tablero-merma:<commit>`.
 
-Abrir Kestra en <http://localhost:8080>:
+**2. Fuente → Raw → Bronze → Silver → Gold → OBT**
+En Kestra, crear los flujos de `kestra/` (namespace `cerveceria.pset2`) y ejecutar `ingesta_merma_raw`. El flujo carga RAW, corre `dbt build` (modelos + tests) y Spark, que valida y publica `CERVECERIA_DB.OBT.OBT_MERMA_LOTES`.
 
-- Usuario: `admin@kestra.io`
-- Contraseña: `Admin1234`
+**3. EDA y modelo**
+Ejecutar los notebooks `01` a `05` en orden. Registran las corridas en el experimento `merma-cerveza` de MLflow y el modelo `merma-cerveza-modelo` con el alias `@champion`.
 
----
-
-## 3. Ingesta con Kestra (Fuente → RAW)
-
-### 3.1 Cargar los flujos
-
-En Kestra: **Flows → Create**, pegar el contenido de cada archivo de `kestra/` y guardar:
-
-1. `test_conexion_snowflake.yml`: ejecutarlo; debe devolver `PSET2_USER`, `PSET2_ROLE` y `PSET2_WH`.
-2. `ingesta_merma_raw.yml`: el flujo de ingesta.
-
-> Si se usa otra cuenta o repositorio, actualizar las variables `sf_url` y `url_fuente` del flujo.
-
-### 3.2 Cómo funciona la ingesta
-
-| Aspecto | Configuración |
-|---|---|
-| Fuente | CSV en GitHub (`data/fuente_merma_levadura_2026.csv`), descargado por HTTP |
-| Trigger | Quincenal: días 1 y 15 de cada mes a las 06:00 (`America/Guayaquil`) |
-| Carga | Ventana de reproceso de **6 semanas** por `fecha_coccion`: `DELETE` + `INSERT` de la ventana (idempotente, sin duplicados) |
-| Reintentos | 3 intentos, cada 5 minutos |
-| Concurrencia | Una ejecución a la vez (`limit: 1`, en cola) para no pisar la tabla de aterrizaje |
-| Backfill | Pestaña **Triggers** → `quincenal` → **Backfill executions** desde `2026-01-01` |
-
-### 3.3 Backfill histórico
-
-1. En el flujo `ingesta_merma_raw`: **Triggers → Backfill executions**.
-2. Inicio: `2026-01-01 00:00`; fin: fecha actual.
-3. Verificar en Snowflake:
-
-```sql
-SELECT COUNT(*) FROM CERVECERIA_DB.RAW.MERMA_LEVADURA;          -- 247
-SELECT numero_documento, COUNT(*) FROM CERVECERIA_DB.RAW.MERMA_LEVADURA
-GROUP BY 1 HAVING COUNT(*) > 1;                                  -- 0 filas (sin duplicados)
-```
-
----
-
-## 4. Transformaciones con dbt (RAW → BRONZE → SILVER → GOLD)
-
+**4. Registro y API**
 ```bash
-docker compose run --rm dbt debug     # verifica la conexión ("All checks passed!")
-docker compose run --rm dbt run       # construye los 5 modelos
-docker compose run --rm dbt test      # ejecuta todos los tests
+python -m src.preparar_api      # umbral k = 2 como tag del champion, línea base y fixtures de CI
+python -m pytest tests -v       # 9 pruebas
 ```
+La API carga `models:/merma-cerveza-modelo@champion` sin reconstruir la imagen.
 
-> Si dbt no detecta un archivo nuevo, limpiar la caché: `docker compose run --rm dbt test --no-partial-parse`.
-
-| Modelo | Capa | Qué hace |
-|---|---|---|
-| `stg_merma_levadura` | BRONZE | Lee de `source('raw', 'merma_levadura')` y convierte tipos con `try_to_*` |
-| `int_merma_limpia` | SILVER | Elimina órdenes abiertas, productos sin levadura y errores de registro; anula datos no confiables; calcula `merma_pct` |
-| `dim_estilo` | GOLD | Un estilo por fila con su cepa y tipo de levadura |
-| `dim_fecha` | GOLD | Calendario diario 2025–2027 |
-| `fct_lotes` | GOLD | Tabla de hechos. **Grano: una fila por orden de producción** |
-
-**Tests incluidos:** `unique` y `not_null` en llaves, `accepted_values` en cepa, `relationships` de `fct_lotes` hacia `dim_estilo` y `dim_fecha`, y el test de negocio `tests/assert_merma_en_rango.sql` (merma entre 0 % y 100 %).
-
----
-
-## 5. OBT con Spark (GOLD → OBT)
-
+**5. Simulación**
 ```bash
-docker compose run --rm spark
+python -m src.preparar_simulacion
 ```
+En Kestra, ejecutar `produccion_lotes` (lotes = `todos`). Las predicciones quedan en `PRODUCCION.PREDICCIONES`.
 
-La primera ejecución tarda unos minutos porque descarga Spark y el conector de Snowflake. El script `spark/build_obt.py`:
-
-1. Lee `FCT_LOTES`, `DIM_ESTILO` y `DIM_FECHA` desde GOLD.
-2. Une los hechos con las dimensiones (`dim_fecha` dos veces: cocción y cierre).
-3. **Valida antes de escribir**: mismo número de filas que `fct_lotes`, órdenes únicas y sin dimensiones faltantes. Si algo falla, no escribe y termina con error.
-4. Guarda el resultado en `CERVECERIA_DB.OBT.OBT_MERMA_LOTES`.
-
-```sql
-SELECT COUNT(*) FROM CERVECERIA_DB.OBT.OBT_MERMA_LOTES;   -- 221
-```
-
----
-
-## 6. Ejecución completa (resumen)
-
+**6. Monitoreo**
 ```bash
-docker compose up -d                  # infraestructura
-# Kestra: ejecutar ingesta_merma_raw (o esperar el trigger quincenal)
-docker compose run --rm dbt run
-docker compose run --rm dbt test
-docker compose run --rm spark
+python -m src.monitoreo --crear-referencia     # una vez: distribución del entrenamiento
 ```
+En Kestra, ejecutar `monitoreo`. Las métricas quedan en `PRODUCCION.MONITOREO` y las alertas en el log; el tablero las muestra en http://localhost:8501.
 
----
+**7. Reentrenamiento, rollback y respaldo**
+- Kestra → `reentrenamiento` (input `motivo`): entrena el challenger, se pausa y espera **Resume** con "promover" o "rechazar".
+- Kestra → `rollback_modelo`: devuelve `@champion` a la versión anterior; comprobar en http://localhost:8000/modelo.
+- Interruptor de respaldo: `MODO_RESPALDO=1 docker compose up -d api` (volver: `docker compose up -d api`).
+
+**8. Cifras del documento**
+```bash
+python -m src.valor_negocio
+python -m src.analisis_final
+```
 
 ## Seguridad
 
-- No se suben contraseñas, tokens ni llaves: `.env`, `keys/` y los archivos generados por dbt están en `.gitignore`.
-- `profiles.yml` y los flujos de Kestra leen las credenciales de variables de entorno y secretos.
-- El usuario `PSET2_USER` es de tipo `SERVICE` y solo tiene permisos sobre `CERVECERIA_DB` y `PSET2_WH`.
+`.env`, `keys/`, `.venv/` y `registros/` están en `.gitignore`. Los flujos de Kestra leen la configuración con `{{ envs.* }}` y la llave con `{{ secret('SNOWFLAKE_PRIVATE_KEY') }}`; ningún archivo del repositorio contiene credenciales.
