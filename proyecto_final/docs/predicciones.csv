@@ -1,0 +1,871 @@
+id_prediccion,timestamp_prediccion,numero_documento,lote_simulacion,entradas,probabilidad,decision,version_modelo,run_id,umbral,respaldo,motivo_respaldo,latencia_ms
+f3f66a63-a9d1-4b3f-95db-28ebc50526df,2026-11-24 20:08:47.922073+00:00,1301,,"{
+  ""carga_planta_14d"": 8,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": null,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1301"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.612505,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,6680.75
+69374dbf-e3f4-485d-87f6-963f819ff328,2026-11-25 20:30:33.015656+00:00,1228,1.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1228"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.672156,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,90.51
+8a50df3b-be7c-47e6-bd83-003397b1cf14,2026-11-25 20:30:39.508449+00:00,1239,1.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1239"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.612505,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,139.11
+f9e62b4d-ade2-4ad4-ac33-2ef2d0e8622b,2026-11-25 20:31:01.369137+00:00,1240,1.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""K-97"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Tortuga"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 1,
+  ""numero_documento"": ""1240"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.642884,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,6175.49
+d064104e-690d-4702-9c3f-2a71554f0fb2,2026-11-25 20:31:01.446241+00:00,1252,1.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1252"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.612505,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,35.6
+75d86c64-25b7-4527-9111-0b978a4e5896,2026-11-25 20:31:02.194495+00:00,1257,1.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 5,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1257"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.612505,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,33.88
+82b476d7-5130-4580-b7c7-fab0418cfb56,2026-11-25 20:31:02.900723+00:00,1266,2.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Honey Bock"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 2,
+  ""n_cocciones"": 1.8,
+  ""numero_documento"": ""1266"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.642884,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,23.54
+056a774c-c5bd-441f-8709-1151bb21afe5,2026-11-25 20:31:03.592905+00:00,1267,2.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 2,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1267"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.642884,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,10.54
+0fb52f01-7dfc-4554-80fd-fd695dd6dcf7,2026-11-25 20:31:04.198386+00:00,1279,2.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""K-97"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Iguana"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 2,
+  ""n_cocciones"": 3,
+  ""numero_documento"": ""1279"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.642884,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,15.38
+6a2525f8-35f9-459c-affc-f9f5797c4f48,2026-11-25 20:31:05.115966+00:00,1280,2.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""US-05"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Condor"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 2,
+  ""n_cocciones"": 1,
+  ""numero_documento"": ""1280"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.672156,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,37.22
+078129f9-7d9c-4e3d-83cd-8e93d6fd4b61,2026-11-25 20:31:05.666007+00:00,1288,2.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 2,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1288"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.612505,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,36.89
+03597963-a909-4381-aa37-d28281da371d,2026-11-25 20:31:06.113543+00:00,1299,2.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 5,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 2,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1299"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.672156,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,22.92
+e649f13b-7db2-4b11-a8c0-42d16830c60f,2026-11-25 20:31:06.712542+00:00,1306,3.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 1,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 3,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1306"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.642884,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,21.36
+a6d25ffb-364e-493c-9f29-ec66b51272e9,2026-11-25 20:31:07.371879+00:00,1317,3.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 3,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1317"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,23.52
+8548f2df-354e-494b-aec3-57b5ce1a8253,2026-11-25 20:31:07.841808+00:00,1321,3.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 3,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1321"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,25.75
+e3791a0e-bb2a-49bf-a6af-37ff8765db8f,2026-11-25 20:31:08.560131+00:00,1322,3.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""US-05"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Red Llama"",
+  ""generacion_levadura"": null,
+  ""levadura_nueva"": null,
+  ""lote_simulacion"": 3,
+  ""n_cocciones"": 1,
+  ""numero_documento"": ""1322"",
+  ""sin_generacion"": 1,
+  ""temporada_alta"": 0
+}",0.579118,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,41.15
+735cfb64-39a7-40e6-9b01-02594f9cd7f1,2026-11-25 20:31:09.385598+00:00,1329,3.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 3,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1329"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,18.22
+1c9fcd72-ef9b-4302-94bf-9b2d2b4579df,2026-11-25 20:31:09.908604+00:00,1335,3.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 5,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 3,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1335"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,18.79
+8cd34f4e-709a-4221-9d75-c46c090f6495,2026-11-25 20:31:10.458254+00:00,1342,4.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 1,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 4,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1342"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.590566,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,24.45
+d01ae4b8-c051-4b93-8cfd-44a7166b7311,2026-11-25 20:31:10.932743+00:00,1346,4.0,"{
+  ""carga_planta_14d"": 13,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 4,
+  ""n_cocciones"": 1,
+  ""numero_documento"": ""1346"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.590566,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,15.7
+1ea9dcc9-8995-4ceb-9e05-6dc53a792ba2,2026-11-25 20:31:11.468371+00:00,1347,4.0,"{
+  ""carga_planta_14d"": 13,
+  ""cepa"": ""US-05"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Condor"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 4,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1347"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.590566,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,20.5
+1e7295b7-2aea-4b54-aeab-cb7b37e356bc,2026-11-25 20:31:11.982054+00:00,1351,4.0,"{
+  ""carga_planta_14d"": 13,
+  ""cepa"": ""K-97"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Iguana"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 4,
+  ""n_cocciones"": 3,
+  ""numero_documento"": ""1351"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.651674,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,22.9
+eba7ea5c-4fdd-4f1c-8b32-a6f287f961a4,2026-11-25 20:31:12.473087+00:00,1377,4.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 4,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1377"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.590566,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,37.25
+37793765-0331-4aa0-a0a0-4d10599ff5d2,2026-11-25 20:31:12.976052+00:00,1378,4.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 5,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 4,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1378"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.590566,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,13.83
+f160212d-8568-41c6-94bf-77a03815f2aa,2026-11-25 20:31:13.669164+00:00,1386,5.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 1,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 5,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1386"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.651674,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,40.19
+9119da7d-4cf1-48a6-a364-a0bbb63c865c,2026-11-25 20:31:14.825179+00:00,1390,5.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 5,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1390"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.651674,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,48.19
+07f98e08-f1fb-4ebe-b7c1-3ceea2fd9bdd,2026-11-25 20:31:15.821708+00:00,1396,5.0,"{
+  ""carga_planta_14d"": 10,
+  ""cepa"": ""K-97"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Tortuga"",
+  ""generacion_levadura"": null,
+  ""levadura_nueva"": null,
+  ""lote_simulacion"": 5,
+  ""n_cocciones"": 1,
+  ""numero_documento"": ""1396"",
+  ""sin_generacion"": 1,
+  ""temporada_alta"": 0
+}",0.579118,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,43.8
+57ed1c4b-4636-4c8c-a92d-7ef7f1c1183d,2026-11-25 20:31:16.414629+00:00,1397,5.0,"{
+  ""carga_planta_14d"": 10,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 5,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1397"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.590566,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,29.42
+bc345d12-2e84-417b-bfbe-4b9fd7a8d3e5,2026-11-25 20:31:16.928509+00:00,1402,5.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 5,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 5,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1402"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.651674,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,21.4
+87d09dc4-90c3-431d-b4a1-8cacc33a52e3,2026-11-25 20:31:17.431936+00:00,1409,6.0,"{
+  ""carga_planta_14d"": 10,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Honey Bock"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 6,
+  ""n_cocciones"": 1.8,
+  ""numero_documento"": ""1409"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,14.9
+c30ade72-7a8f-46e4-9f0e-bc8ab54bb9dc,2026-11-25 20:31:18.164336+00:00,1432,6.0,"{
+  ""carga_planta_14d"": 8,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 6,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1432"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,18.5
+80841ef1-6c7e-4a77-9221-d2a28cf5f6ec,2026-11-25 20:31:18.798279+00:00,1438,6.0,"{
+  ""carga_planta_14d"": 8,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 5,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 6,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1438"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,23.12
+91f21454-2800-4b68-8f68-029735e09996,2026-11-25 20:31:19.455083+00:00,1456,7.0,"{
+  ""carga_planta_14d"": 8,
+  ""cepa"": ""US-05"",
+  ""coccion_dia_semana"": 1,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Red Llama"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 7,
+  ""n_cocciones"": 1,
+  ""numero_documento"": ""1456"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.651674,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,15.91
+3a116831-32df-4699-bfd2-6c512b8aeb2d,2026-11-25 20:31:20.142031+00:00,1457,7.0,"{
+  ""carga_planta_14d"": 8,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 7,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1457"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.590566,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,30.53
+df385a1a-a221-4c43-8016-b000d59f502e,2026-11-25 20:31:20.780004+00:00,1463,7.0,"{
+  ""carga_planta_14d"": 8,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 7,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1463"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.651674,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,26.97
+15583aa3-c82a-4f8a-a519-e10f2b44eb3a,2026-11-25 20:31:21.359941+00:00,1473,7.0,"{
+  ""carga_planta_14d"": 9,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 7,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1473"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.651674,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,22.02
+3cda27bf-3afa-4c80-a9bf-129be9ebc1d0,2026-11-25 20:31:21.914129+00:00,1482,7.0,"{
+  ""carga_planta_14d"": 8,
+  ""cepa"": ""US-05"",
+  ""coccion_dia_semana"": 5,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Condor"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 7,
+  ""n_cocciones"": 1,
+  ""numero_documento"": ""1482"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,19.87
+29cd8b43-8d8f-4e4d-953a-3d87a219d7c6,2026-11-25 20:31:22.702729+00:00,1483,8.0,"{
+  ""carga_planta_14d"": 8,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 1,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": null,
+  ""levadura_nueva"": null,
+  ""lote_simulacion"": 8,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1483"",
+  ""sin_generacion"": 1,
+  ""temporada_alta"": 0
+}",0.579118,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,29.77
+e0731425-e84a-420d-9197-1318e0fb2227,2026-11-25 20:31:23.253771+00:00,1495,8.0,"{
+  ""carga_planta_14d"": 9,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": null,
+  ""levadura_nueva"": null,
+  ""lote_simulacion"": 8,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1495"",
+  ""sin_generacion"": 1,
+  ""temporada_alta"": 0
+}",0.579118,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,38.85
+21b7d294-55ab-4686-b037-4c53a250bbbe,2026-11-25 20:31:23.784793+00:00,1496,8.0,"{
+  ""carga_planta_14d"": 9,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": null,
+  ""levadura_nueva"": null,
+  ""lote_simulacion"": 8,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1496"",
+  ""sin_generacion"": 1,
+  ""temporada_alta"": 0
+}",0.579118,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,29.24
+330c9bf0-bb97-42a0-9cf2-880791e4700a,2026-11-25 20:31:24.291629+00:00,1501,8.0,"{
+  ""carga_planta_14d"": 10,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 8,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1501"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,37.02
+a505ff12-e61b-438f-bd12-77ac0783d1ea,2026-11-25 20:31:36.016967+00:00,1509,8.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 8,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1509"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.590566,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,10708.94
+c9249cd4-08ec-4e1a-8c51-6d6768b68a7a,2026-11-25 20:31:36.119996+00:00,1519,8.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 5,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 8,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1519"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.651674,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,23.12
+bd07b929-e8a0-4084-874c-2665bb37b26e,2026-11-25 20:31:36.755964+00:00,1516,9.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 1,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 9,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1516"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,38.54
+2574b245-23f1-4337-a424-c228f536705b,2026-11-25 20:31:37.188326+00:00,1518,9.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 9,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1518"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.651674,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,29.24
+0b1a0ade-118e-49bd-ae74-c34e6d830984,2026-11-25 20:31:37.710238+00:00,1496,10.0,"{
+  ""carga_planta_14d"": 21,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 4,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 10,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1496"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.526527,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,17.34
+fccb40a8-e678-4bc1-a4ec-66a20fed14ff,2026-11-25 20:31:38.248700+00:00,1390,10.0,"{
+  ""carga_planta_14d"": 24,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 5,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 10,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1390"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.494039,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,31.77
+4fd587ce-d550-4a9f-9903-3d5196708419,2026-11-25 20:31:38.802129+00:00,1396,10.0,"{
+  ""carga_planta_14d"": 22,
+  ""cepa"": ""K-97"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Tortuga"",
+  ""generacion_levadura"": 5,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 10,
+  ""n_cocciones"": 1,
+  ""numero_documento"": ""1396"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.494039,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,23.32
+0a030470-09ef-40e9-b0a1-92210079556a,2026-11-25 20:31:39.302477+00:00,1516,10.0,"{
+  ""carga_planta_14d"": 23,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 1,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 4,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 10,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1516"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.526527,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,16.14
+e6c7012f-97af-49fe-829a-c350c0210775,2026-11-25 20:31:39.819280+00:00,1473,10.0,"{
+  ""carga_planta_14d"": 21,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 4,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 10,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1473"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.526527,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,22.35
+2891a4a7-781a-46db-ad16-010e894e318d,2026-11-25 20:31:40.333587+00:00,1509,10.0,"{
+  ""carga_planta_14d"": 23,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 5,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 10,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1509"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.494039,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,24.8
+024dd24c-92da-43a9-b5e5-0783e966d40e,2026-11-25 21:13:34.381630+00:00,1219,1.0,"{
+  ""carga_planta_14d"": 12,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 1,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1219"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.612505,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,2544.32
+58e04dab-308f-433d-b130-fb5412d8e18b,2026-11-25 21:13:34.529793+00:00,1228,1.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1228"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.672156,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,51.41
+5c0582b4-5d49-42e9-a4d5-c75f346acd76,2026-11-25 21:13:44.284441+00:00,1239,1.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1239"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.612505,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,80.24
+fd899da0-0d5e-4ef2-9429-9ecf960c083b,2026-11-25 21:13:45.088480+00:00,1240,1.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""K-97"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Tortuga"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 1,
+  ""numero_documento"": ""1240"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.642884,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,18.88
+3bc18604-2eb7-4abc-a15b-cdcf4c91d955,2026-11-25 21:13:45.636836+00:00,1252,1.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 4,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1252"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.612505,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,31.72
+343b9519-43e5-4079-b284-6e48fd1bc79c,2026-11-25 21:13:46.148780+00:00,1257,1.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 5,
+  ""coccion_mes"": 8,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 1,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1257"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",0.612505,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,17.27
+54e66589-9c04-44c5-a995-991cb5106496,2026-11-26 02:10:51.318334+00:00,1301,,"{
+  ""carga_planta_14d"": 8,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 3,
+  ""coccion_mes"": 9,
+  ""con_microscopio"": 1,
+  ""estilo"": ""Honey Bock"",
+  ""generacion_levadura"": 2,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": null,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1301"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 1
+}",1.0,aplicar_clarificante,linea_base,,,True,interruptor MODO_RESPALDO activado,717.23

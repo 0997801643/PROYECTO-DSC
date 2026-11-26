@@ -1,0 +1,481 @@
+fecha_ejecucion,lote_simulacion,tipo,metrica,variable,valor,umbral,alerta,detalle
+2026-11-25 21:19:53.950794+00:00,1,datos,p_valor_chi2,cepa,0.780375,0.05,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,p_valor_chi2,temporada_alta,0.062324,0.05,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,p_valor_chi2,con_microscopio,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,p_valor_chi2,sin_generacion,0.671778,0.05,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,p_valor_chi2,levadura_nueva,1.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,p_valor_ks,carga_planta_14d,0.033783,0.05,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,p_valor_ks,generacion_levadura,0.673662,0.05,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,p_valor_ks,n_cocciones,0.923312,0.05,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,p_valor_ks,coccion_mes,1e-06,0.05,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,p_valor_ks,coccion_dia_semana,0.999962,0.05,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_categoria_nueva,cepa,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_fuera_rango,generacion_levadura,0.0,0.2,False,"rango del entrenamiento [0, 5]"
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_fuera_rango,n_cocciones,0.0,0.2,False,"rango del entrenamiento [0.9, 4]"
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_fuera_rango,coccion_mes,0.0,0.2,False,"rango del entrenamiento [1, 8]"
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_fuera_rango,carga_planta_14d,0.0,0.2,False,"rango del entrenamiento [0, 15]"
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_fuera_rango,coccion_dia_semana,0.0,0.2,False,"rango del entrenamiento [1, 6]"
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_nulos,generacion_levadura,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_nulos,con_microscopio,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_nulos,n_cocciones,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_nulos,carga_planta_14d,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_nulos,levadura_nueva,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_nulos,cepa,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_nulos,coccion_mes,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_nulos,sin_generacion,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_nulos,temporada_alta,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,pct_nulos,coccion_dia_semana,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,1,datos,psi,carga_planta_14d,6.443495,0.25,True,p = 0.0338: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,1,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,1,datos,psi,coccion_mes,6.615364,0.25,False,"p = 0.0000: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,1,datos,psi,sin_generacion,1.100991,0.25,False,p = 0.6718
+2026-11-25 21:19:53.950794+00:00,1,datos,psi,temporada_alta,4.289019,0.25,False,p = 0.0623
+2026-11-25 21:19:53.950794+00:00,1,datos,psi,coccion_dia_semana,0.149885,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,1,datos,psi,levadura_nueva,0.003031,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,1,datos,psi,cepa,0.843412,0.25,False,p = 0.7804
+2026-11-25 21:19:53.950794+00:00,1,datos,psi,n_cocciones,0.29298,0.25,False,p = 0.9233
+2026-11-25 21:19:53.950794+00:00,1,datos,psi,generacion_levadura,2.397657,0.25,False,p = 0.6737
+2026-11-25 21:19:53.950794+00:00,1,desempeno,sin_etiquetas,,,,False,la merma real llega 2 semanas después
+2026-11-25 21:19:53.950794+00:00,1,modelo,pct_aplicar,,0.333333,,False,
+2026-11-25 21:19:53.950794+00:00,1,modelo,probabilidad_media,,0.62751,,False,
+2026-11-25 21:19:53.950794+00:00,1,modelo,psi_probabilidad,probabilidad,5.56354,0.25,True,p = 0.0085
+2026-11-25 21:19:53.950794+00:00,1,negocio,clarificantes_semana,,2.0,2.0,False,presupuesto: 2 por semana
+2026-11-25 21:19:53.950794+00:00,1,sistema,latencia_p95_ms,,1928.3,500.0,True,
+2026-11-25 21:19:53.950794+00:00,1,sistema,pct_predicciones_faltantes,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,1,sistema,pct_respaldo,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,p_valor_chi2,cepa,0.84919,0.05,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,p_valor_chi2,temporada_alta,0.062324,0.05,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,p_valor_chi2,con_microscopio,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,p_valor_chi2,sin_generacion,0.671778,0.05,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,p_valor_chi2,levadura_nueva,0.505591,0.05,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,p_valor_ks,carga_planta_14d,0.121467,0.05,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,p_valor_ks,generacion_levadura,0.231919,0.05,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,p_valor_ks,n_cocciones,0.973091,0.05,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,p_valor_ks,coccion_mes,1e-06,0.05,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,p_valor_ks,coccion_dia_semana,0.915218,0.05,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_categoria_nueva,cepa,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_fuera_rango,generacion_levadura,0.0,0.2,False,"rango del entrenamiento [0, 5]"
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_fuera_rango,n_cocciones,0.0,0.2,False,"rango del entrenamiento [0.9, 4]"
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_fuera_rango,coccion_mes,0.0,0.2,False,"rango del entrenamiento [1, 8]"
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_fuera_rango,carga_planta_14d,0.0,0.2,False,"rango del entrenamiento [0, 15]"
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_fuera_rango,coccion_dia_semana,0.0,0.2,False,"rango del entrenamiento [1, 6]"
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_nulos,generacion_levadura,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_nulos,con_microscopio,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_nulos,n_cocciones,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_nulos,carga_planta_14d,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_nulos,levadura_nueva,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_nulos,cepa,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_nulos,coccion_mes,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_nulos,sin_generacion,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_nulos,temporada_alta,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,pct_nulos,coccion_dia_semana,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,2,datos,psi,carga_planta_14d,5.932027,0.25,False,p = 0.1215
+2026-11-25 21:19:53.950794+00:00,2,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,2,datos,psi,coccion_mes,6.615364,0.25,False,"p = 0.0000: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,2,datos,psi,sin_generacion,1.100991,0.25,False,p = 0.6718
+2026-11-25 21:19:53.950794+00:00,2,datos,psi,temporada_alta,4.289019,0.25,False,p = 0.0623
+2026-11-25 21:19:53.950794+00:00,2,datos,psi,coccion_dia_semana,1.866149,0.25,False,p = 0.9152
+2026-11-25 21:19:53.950794+00:00,2,datos,psi,levadura_nueva,0.19933,0.25,False,p = 0.5056
+2026-11-25 21:19:53.950794+00:00,2,datos,psi,cepa,0.185301,0.25,False,p = 0.8492
+2026-11-25 21:19:53.950794+00:00,2,datos,psi,n_cocciones,0.458186,0.25,False,p = 0.9731
+2026-11-25 21:19:53.950794+00:00,2,datos,psi,generacion_levadura,2.38222,0.25,False,p = 0.2319
+2026-11-25 21:19:53.950794+00:00,2,desempeno,sin_etiquetas,,,,False,la merma real llega 2 semanas después
+2026-11-25 21:19:53.950794+00:00,2,modelo,pct_aplicar,,0.833333,,False,
+2026-11-25 21:19:53.950794+00:00,2,modelo,probabilidad_media,,0.647578,,False,
+2026-11-25 21:19:53.950794+00:00,2,modelo,psi_probabilidad,probabilidad,5.216115,0.25,True,p = 0.0020
+2026-11-25 21:19:53.950794+00:00,2,negocio,clarificantes_semana,,5.0,2.0,True,presupuesto: 2 por semana
+2026-11-25 21:19:53.950794+00:00,2,sistema,latencia_p95_ms,,37.1375,500.0,False,
+2026-11-25 21:19:53.950794+00:00,2,sistema,pct_predicciones_faltantes,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,2,sistema,pct_respaldo,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,p_valor_chi2,con_microscopio,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,p_valor_chi2,temporada_alta,0.184084,0.05,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,p_valor_chi2,sin_generacion,1.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,p_valor_chi2,levadura_nueva,0.784747,0.05,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,p_valor_chi2,cepa,0.827333,0.05,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,p_valor_ks,generacion_levadura,0.050987,0.05,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,p_valor_ks,n_cocciones,0.923312,0.05,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,p_valor_ks,carga_planta_14d,0.121467,0.05,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,p_valor_ks,coccion_dia_semana,0.999962,0.05,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,p_valor_ks,coccion_mes,1e-06,0.05,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_categoria_nueva,cepa,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_fuera_rango,n_cocciones,0.0,0.2,False,"rango del entrenamiento [0.9, 4]"
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_fuera_rango,coccion_mes,0.833333,0.2,False,"rango del entrenamiento [1, 8]"
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_fuera_rango,coccion_dia_semana,0.0,0.2,False,"rango del entrenamiento [1, 6]"
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_fuera_rango,carga_planta_14d,0.0,0.2,False,"rango del entrenamiento [0, 15]"
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_fuera_rango,generacion_levadura,0.0,0.2,False,"rango del entrenamiento [0, 5]"
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_nulos,coccion_dia_semana,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_nulos,n_cocciones,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_nulos,carga_planta_14d,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_nulos,temporada_alta,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_nulos,cepa,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_nulos,con_microscopio,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_nulos,coccion_mes,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_nulos,sin_generacion,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_nulos,generacion_levadura,0.166667,0.2,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,pct_nulos,levadura_nueva,0.166667,0.2,False,
+2026-11-25 21:19:53.950794+00:00,3,datos,psi,sin_generacion,0.00271,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,3,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,3,datos,psi,levadura_nueva,1.091843,0.25,False,p = 0.7847
+2026-11-25 21:19:53.950794+00:00,3,datos,psi,n_cocciones,0.29298,0.25,False,p = 0.9233
+2026-11-25 21:19:53.950794+00:00,3,datos,psi,temporada_alta,0.623353,0.25,False,p = 0.1841
+2026-11-25 21:19:53.950794+00:00,3,datos,psi,carga_planta_14d,6.467569,0.25,False,p = 0.1215
+2026-11-25 21:19:53.950794+00:00,3,datos,psi,coccion_dia_semana,0.149885,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,3,datos,psi,cepa,0.739491,0.25,False,p = 0.8273
+2026-11-25 21:19:53.950794+00:00,3,datos,psi,coccion_mes,6.615364,0.25,False,"p = 0.0000: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,3,datos,psi,generacion_levadura,6.356064,0.25,False,p = 0.0510
+2026-11-25 21:19:53.950794+00:00,3,desempeno,costo_por_lote_modelo,,71.664833,101.82054166666667,False,acumulado de los lotes 1 a 1 (6 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,3,desempeno,costo_por_lote_regla_estilo,,101.820542,,False,acumulado de los lotes 1 a 1 (6 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,3,desempeno,costo_por_lote_sin_accion,,101.820542,,False,acumulado de los lotes 1 a 1 (6 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,3,desempeno,precision,,1.0,,False,acumulado de los lotes 1 a 1 (6 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,3,desempeno,recall,,0.4,,False,acumulado de los lotes 1 a 1 (6 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,3,desempeno,roc_auc,,0.7,0.5,False,acumulado de los lotes 1 a 1 (6 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,3,modelo,pct_aplicar,,0.833333,,False,
+2026-11-25 21:19:53.950794+00:00,3,modelo,probabilidad_media,,0.618068,,False,
+2026-11-25 21:19:53.950794+00:00,3,modelo,psi_probabilidad,probabilidad,5.714412,0.25,False,p = 0.1081
+2026-11-25 21:19:53.950794+00:00,3,negocio,clarificantes_semana,,5.0,2.0,True,presupuesto: 2 por semana
+2026-11-25 21:19:53.950794+00:00,3,sistema,latencia_p95_ms,,37.3,500.0,False,
+2026-11-25 21:19:53.950794+00:00,3,sistema,pct_predicciones_faltantes,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,3,sistema,pct_respaldo,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,p_valor_chi2,con_microscopio,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,p_valor_chi2,temporada_alta,0.033089,0.05,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,p_valor_chi2,sin_generacion,0.671778,0.05,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,p_valor_chi2,levadura_nueva,1.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,p_valor_chi2,cepa,0.84919,0.05,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,p_valor_ks,generacion_levadura,0.673662,0.05,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,p_valor_ks,n_cocciones,0.999755,0.05,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,p_valor_ks,carga_planta_14d,0.668422,0.05,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,p_valor_ks,coccion_dia_semana,0.999814,0.05,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,p_valor_ks,coccion_mes,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_categoria_nueva,cepa,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_fuera_rango,n_cocciones,0.0,0.2,False,"rango del entrenamiento [0.9, 4]"
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_fuera_rango,coccion_mes,1.0,0.2,False,"rango del entrenamiento [1, 8]"
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_fuera_rango,coccion_dia_semana,0.0,0.2,False,"rango del entrenamiento [1, 6]"
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_fuera_rango,carga_planta_14d,0.0,0.2,False,"rango del entrenamiento [0, 15]"
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_fuera_rango,generacion_levadura,0.0,0.2,False,"rango del entrenamiento [0, 5]"
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_nulos,coccion_dia_semana,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_nulos,n_cocciones,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_nulos,carga_planta_14d,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_nulos,temporada_alta,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_nulos,cepa,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_nulos,con_microscopio,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_nulos,coccion_mes,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_nulos,sin_generacion,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_nulos,generacion_levadura,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,pct_nulos,levadura_nueva,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,4,datos,psi,sin_generacion,1.100991,0.25,False,p = 0.6718
+2026-11-25 21:19:53.950794+00:00,4,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,4,datos,psi,levadura_nueva,0.003031,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,4,datos,psi,n_cocciones,0.175506,0.25,False,p = 0.9998
+2026-11-25 21:19:53.950794+00:00,4,datos,psi,temporada_alta,4.926082,0.25,False,"p = 0.0331: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,4,datos,psi,carga_planta_14d,3.849295,0.25,False,p = 0.6684
+2026-11-25 21:19:53.950794+00:00,4,datos,psi,coccion_dia_semana,0.168877,0.25,False,p = 0.9998
+2026-11-25 21:19:53.950794+00:00,4,datos,psi,cepa,0.185301,0.25,False,p = 0.8492
+2026-11-25 21:19:53.950794+00:00,4,datos,psi,coccion_mes,6.615364,0.25,False,"p = 0.0000: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,4,datos,psi,generacion_levadura,4.817859,0.25,False,p = 0.6737
+2026-11-25 21:19:53.950794+00:00,4,desempeno,costo_por_lote_modelo,,52.521,85.3766875,False,acumulado de los lotes 1 a 2 (12 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,4,desempeno,costo_por_lote_regla_estilo,,85.376688,,False,acumulado de los lotes 1 a 2 (12 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,4,desempeno,costo_por_lote_sin_accion,,131.544313,,False,acumulado de los lotes 1 a 2 (12 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,4,desempeno,precision,,1.0,,False,acumulado de los lotes 1 a 2 (12 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,4,desempeno,recall,,0.636364,,False,acumulado de los lotes 1 a 2 (12 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,4,desempeno,roc_auc,,0.818182,0.5,False,acumulado de los lotes 1 a 2 (12 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,4,modelo,pct_aplicar,,0.166667,,False,
+2026-11-25 21:19:53.950794+00:00,4,modelo,probabilidad_media,,0.600751,,False,
+2026-11-25 21:19:53.950794+00:00,4,modelo,psi_probabilidad,probabilidad,6.250565,0.25,False,p = 0.1594
+2026-11-25 21:19:53.950794+00:00,4,negocio,clarificantes_semana,,1.0,2.0,False,presupuesto: 2 por semana
+2026-11-25 21:19:53.950794+00:00,4,sistema,latencia_p95_ms,,34.05,500.0,False,
+2026-11-25 21:19:53.950794+00:00,4,sistema,pct_predicciones_faltantes,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,4,sistema,pct_respaldo,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,p_valor_chi2,con_microscopio,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,p_valor_chi2,temporada_alta,0.060457,0.05,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,p_valor_chi2,sin_generacion,1.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,p_valor_chi2,levadura_nueva,0.011006,0.05,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,p_valor_chi2,cepa,0.749822,0.05,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,p_valor_ks,generacion_levadura,0.071447,0.05,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,p_valor_ks,n_cocciones,0.999851,0.05,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,p_valor_ks,carga_planta_14d,0.185187,0.05,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,p_valor_ks,coccion_dia_semana,0.998834,0.05,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,p_valor_ks,coccion_mes,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_categoria_nueva,cepa,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_fuera_rango,n_cocciones,0.0,0.2,False,"rango del entrenamiento [0.9, 4]"
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_fuera_rango,coccion_mes,1.0,0.2,False,"rango del entrenamiento [1, 8]"
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_fuera_rango,coccion_dia_semana,0.0,0.2,False,"rango del entrenamiento [1, 6]"
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_fuera_rango,carga_planta_14d,0.0,0.2,False,"rango del entrenamiento [0, 15]"
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_fuera_rango,generacion_levadura,0.0,0.2,False,"rango del entrenamiento [0, 5]"
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_nulos,coccion_dia_semana,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_nulos,n_cocciones,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_nulos,carga_planta_14d,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_nulos,temporada_alta,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_nulos,cepa,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_nulos,con_microscopio,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_nulos,coccion_mes,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_nulos,sin_generacion,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_nulos,generacion_levadura,0.2,0.2,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,pct_nulos,levadura_nueva,0.2,0.2,False,
+2026-11-25 21:19:53.950794+00:00,5,datos,psi,sin_generacion,0.019145,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,5,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,5,datos,psi,levadura_nueva,1.725292,0.25,True,p = 0.0110: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,5,datos,psi,n_cocciones,0.255543,0.25,False,p = 0.9999
+2026-11-25 21:19:53.950794+00:00,5,datos,psi,temporada_alta,4.926082,0.25,False,p = 0.0605
+2026-11-25 21:19:53.950794+00:00,5,datos,psi,carga_planta_14d,4.376725,0.25,False,p = 0.1852
+2026-11-25 21:19:53.950794+00:00,5,datos,psi,coccion_dia_semana,1.474724,0.25,False,p = 0.9988
+2026-11-25 21:19:53.950794+00:00,5,datos,psi,cepa,0.881299,0.25,False,p = 0.7498
+2026-11-25 21:19:53.950794+00:00,5,datos,psi,coccion_mes,6.615364,0.25,False,"p = 0.0000: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,5,datos,psi,generacion_levadura,5.242988,0.25,False,p = 0.0714
+2026-11-25 21:19:53.950794+00:00,5,desempeno,costo_por_lote_modelo,,39.721869,97.26929166666666,False,acumulado de los lotes 1 a 3 (18 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,5,desempeno,costo_por_lote_regla_estilo,,97.269292,,False,acumulado de los lotes 1 a 3 (18 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,5,desempeno,costo_por_lote_sin_accion,,131.363278,,False,acumulado de los lotes 1 a 3 (18 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,5,desempeno,precision,,0.916667,,False,acumulado de los lotes 1 a 3 (18 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,5,desempeno,recall,,0.6875,,False,acumulado de los lotes 1 a 3 (18 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,5,desempeno,roc_auc,,0.703125,0.5,False,acumulado de los lotes 1 a 3 (18 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,5,modelo,pct_aplicar,,0.6,,False,
+2026-11-25 21:19:53.950794+00:00,5,modelo,probabilidad_media,,0.624941,,False,
+2026-11-25 21:19:53.950794+00:00,5,modelo,psi_probabilidad,probabilidad,5.116831,0.25,False,p = 0.0896
+2026-11-25 21:19:53.950794+00:00,5,negocio,clarificantes_semana,,3.0,2.0,True,presupuesto: 2 por semana
+2026-11-25 21:19:53.950794+00:00,5,sistema,latencia_p95_ms,,47.312,500.0,False,
+2026-11-25 21:19:53.950794+00:00,5,sistema,pct_predicciones_faltantes,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,5,sistema,pct_respaldo,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,p_valor_chi2,con_microscopio,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,p_valor_chi2,temporada_alta,0.217295,0.05,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,p_valor_chi2,sin_generacion,1.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,p_valor_chi2,levadura_nueva,1.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,p_valor_chi2,cepa,0.850659,0.05,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,p_valor_ks,generacion_levadura,0.198966,0.05,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,p_valor_ks,n_cocciones,0.997289,0.05,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,p_valor_ks,carga_planta_14d,0.013927,0.05,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,p_valor_ks,coccion_dia_semana,0.99414,0.05,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,p_valor_ks,coccion_mes,2e-06,0.05,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_categoria_nueva,cepa,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_fuera_rango,n_cocciones,0.0,0.2,False,"rango del entrenamiento [0.9, 4]"
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_fuera_rango,coccion_mes,1.0,0.2,False,"rango del entrenamiento [1, 8]"
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_fuera_rango,coccion_dia_semana,0.0,0.2,False,"rango del entrenamiento [1, 6]"
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_fuera_rango,carga_planta_14d,0.0,0.2,False,"rango del entrenamiento [0, 15]"
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_fuera_rango,generacion_levadura,0.0,0.2,False,"rango del entrenamiento [0, 5]"
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_nulos,coccion_dia_semana,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_nulos,n_cocciones,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_nulos,carga_planta_14d,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_nulos,temporada_alta,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_nulos,cepa,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_nulos,con_microscopio,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_nulos,coccion_mes,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_nulos,sin_generacion,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_nulos,generacion_levadura,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,pct_nulos,levadura_nueva,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,6,datos,psi,sin_generacion,1.100991,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,6,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,6,datos,psi,levadura_nueva,1.091843,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,6,datos,psi,n_cocciones,2.907603,0.25,False,p = 0.9973
+2026-11-25 21:19:53.950794+00:00,6,datos,psi,temporada_alta,4.926082,0.25,False,p = 0.2173
+2026-11-25 21:19:53.950794+00:00,6,datos,psi,carga_planta_14d,7.987857,0.25,True,p = 0.0139: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,6,datos,psi,coccion_dia_semana,3.135499,0.25,False,p = 0.9941
+2026-11-25 21:19:53.950794+00:00,6,datos,psi,cepa,1.463402,0.25,False,p = 0.8507
+2026-11-25 21:19:53.950794+00:00,6,datos,psi,coccion_mes,6.615364,0.25,False,"p = 0.0000: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,6,datos,psi,generacion_levadura,6.356064,0.25,False,p = 0.1990
+2026-11-25 21:19:53.950794+00:00,6,desempeno,costo_por_lote_modelo,,42.44435,85.60491666666667,False,acumulado de los lotes 1 a 4 (24 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,6,desempeno,costo_por_lote_regla_estilo,,85.604917,,False,acumulado de los lotes 1 a 4 (24 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,6,desempeno,costo_por_lote_sin_accion,,126.604219,,False,acumulado de los lotes 1 a 4 (24 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,6,desempeno,precision,,0.923077,,False,acumulado de los lotes 1 a 4 (24 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,6,desempeno,recall,,0.571429,,False,acumulado de los lotes 1 a 4 (24 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,6,desempeno,roc_auc,,0.674603,0.5,False,acumulado de los lotes 1 a 4 (24 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,6,modelo,pct_aplicar,,1.0,,False,
+2026-11-25 21:19:53.950794+00:00,6,modelo,probabilidad_media,,0.621602,,False,
+2026-11-25 21:19:53.950794+00:00,6,modelo,psi_probabilidad,probabilidad,8.3593,0.25,False,p = 0.1069
+2026-11-25 21:19:53.950794+00:00,6,negocio,clarificantes_semana,,3.0,2.0,True,presupuesto: 2 por semana
+2026-11-25 21:19:53.950794+00:00,6,sistema,latencia_p95_ms,,22.658,500.0,False,
+2026-11-25 21:19:53.950794+00:00,6,sistema,pct_predicciones_faltantes,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,6,sistema,pct_respaldo,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,p_valor_chi2,con_microscopio,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,p_valor_chi2,temporada_alta,0.060457,0.05,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,p_valor_chi2,sin_generacion,0.777797,0.05,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,p_valor_chi2,levadura_nueva,0.036326,0.05,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,p_valor_chi2,cepa,0.198188,0.05,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,p_valor_ks,generacion_levadura,0.20617,0.05,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,p_valor_ks,n_cocciones,0.847629,0.05,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,p_valor_ks,carga_planta_14d,4e-06,0.05,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,p_valor_ks,coccion_dia_semana,1.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,p_valor_ks,coccion_mes,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_categoria_nueva,cepa,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_fuera_rango,n_cocciones,0.0,0.2,False,"rango del entrenamiento [0.9, 4]"
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_fuera_rango,coccion_mes,1.0,0.2,False,"rango del entrenamiento [1, 8]"
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_fuera_rango,coccion_dia_semana,0.0,0.2,False,"rango del entrenamiento [1, 6]"
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_fuera_rango,carga_planta_14d,0.0,0.2,False,"rango del entrenamiento [0, 15]"
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_fuera_rango,generacion_levadura,0.0,0.2,False,"rango del entrenamiento [0, 5]"
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_nulos,coccion_dia_semana,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_nulos,n_cocciones,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_nulos,carga_planta_14d,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_nulos,temporada_alta,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_nulos,cepa,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_nulos,con_microscopio,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_nulos,coccion_mes,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_nulos,sin_generacion,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_nulos,generacion_levadura,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,pct_nulos,levadura_nueva,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,7,datos,psi,sin_generacion,1.100991,0.25,False,p = 0.7778
+2026-11-25 21:19:53.950794+00:00,7,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,7,datos,psi,levadura_nueva,0.982125,0.25,True,p = 0.0363: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,7,datos,psi,n_cocciones,3.001404,0.25,False,p = 0.8476
+2026-11-25 21:19:53.950794+00:00,7,datos,psi,temporada_alta,4.926082,0.25,False,p = 0.0605
+2026-11-25 21:19:53.950794+00:00,7,datos,psi,carga_planta_14d,9.877406,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,7,datos,psi,coccion_dia_semana,0.021531,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,7,datos,psi,cepa,1.163905,0.25,False,p = 0.1982
+2026-11-25 21:19:53.950794+00:00,7,datos,psi,coccion_mes,6.615364,0.25,False,"p = 0.0000: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,7,datos,psi,generacion_levadura,2.731109,0.25,False,p = 0.2062
+2026-11-25 21:19:53.950794+00:00,7,desempeno,costo_por_lote_modelo,,35.126359,75.59398275862068,False,acumulado de los lotes 1 a 5 (29 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,7,desempeno,costo_por_lote_regla_estilo,,75.593983,,False,acumulado de los lotes 1 a 5 (29 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,7,desempeno,costo_por_lote_sin_accion,,109.52444,,False,acumulado de los lotes 1 a 5 (29 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,7,desempeno,precision,,0.9375,,False,acumulado de los lotes 1 a 5 (29 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,7,desempeno,recall,,0.625,,False,acumulado de los lotes 1 a 5 (29 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,7,desempeno,roc_auc,,0.8,0.5,False,acumulado de los lotes 1 a 5 (29 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,7,modelo,pct_aplicar,,0.8,,False,
+2026-11-25 21:19:53.950794+00:00,7,modelo,probabilidad_media,,0.633438,,False,
+2026-11-25 21:19:53.950794+00:00,7,modelo,psi_probabilidad,probabilidad,5.170826,0.25,False,p = 0.0896
+2026-11-25 21:19:53.950794+00:00,7,negocio,clarificantes_semana,,4.0,2.0,True,presupuesto: 2 por semana
+2026-11-25 21:19:53.950794+00:00,7,sistema,latencia_p95_ms,,29.818,500.0,False,
+2026-11-25 21:19:53.950794+00:00,7,sistema,pct_predicciones_faltantes,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,7,sistema,pct_respaldo,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,p_valor_chi2,con_microscopio,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,p_valor_chi2,temporada_alta,0.033089,0.05,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,p_valor_chi2,sin_generacion,0.079891,0.05,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,p_valor_chi2,levadura_nueva,0.936256,0.05,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,p_valor_chi2,cepa,0.663199,0.05,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,p_valor_ks,generacion_levadura,0.938598,0.05,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,p_valor_ks,n_cocciones,0.995535,0.05,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,p_valor_ks,carga_planta_14d,0.001481,0.05,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,p_valor_ks,coccion_dia_semana,0.999814,0.05,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,p_valor_ks,coccion_mes,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_categoria_nueva,cepa,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_fuera_rango,n_cocciones,0.0,0.2,False,"rango del entrenamiento [0.9, 4]"
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_fuera_rango,coccion_mes,1.0,0.2,False,"rango del entrenamiento [1, 8]"
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_fuera_rango,coccion_dia_semana,0.0,0.2,False,"rango del entrenamiento [1, 6]"
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_fuera_rango,carga_planta_14d,0.0,0.2,False,"rango del entrenamiento [0, 15]"
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_fuera_rango,generacion_levadura,0.0,0.2,False,"rango del entrenamiento [0, 5]"
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,coccion_dia_semana,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,n_cocciones,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,carga_planta_14d,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,temporada_alta,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,cepa,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,con_microscopio,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,coccion_mes,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,sin_generacion,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,generacion_levadura,0.5,0.2,True,
+2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,levadura_nueva,0.5,0.2,True,
+2026-11-25 21:19:53.950794+00:00,8,datos,psi,sin_generacion,0.617372,0.25,False,p = 0.0799
+2026-11-25 21:19:53.950794+00:00,8,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,8,datos,psi,levadura_nueva,0.19933,0.25,False,p = 0.9363
+2026-11-25 21:19:53.950794+00:00,8,datos,psi,n_cocciones,1.14095,0.25,False,p = 0.9955
+2026-11-25 21:19:53.950794+00:00,8,datos,psi,temporada_alta,4.926082,0.25,False,"p = 0.0331: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,8,datos,psi,carga_planta_14d,6.887658,0.25,True,p = 0.0015: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,8,datos,psi,coccion_dia_semana,0.168877,0.25,False,p = 0.9998
+2026-11-25 21:19:53.950794+00:00,8,datos,psi,cepa,1.463402,0.25,False,p = 0.6632
+2026-11-25 21:19:53.950794+00:00,8,datos,psi,coccion_mes,6.615364,0.25,False,"p = 0.0000: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,8,datos,psi,generacion_levadura,2.197466,0.25,False,p = 0.9386
+2026-11-25 21:19:53.950794+00:00,8,desempeno,costo_por_lote_modelo,,31.833263,72.350046875,False,acumulado de los lotes 1 a 6 (32 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,8,desempeno,costo_por_lote_regla_estilo,,72.350047,,False,acumulado de los lotes 1 a 6 (32 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,8,desempeno,costo_por_lote_sin_accion,,109.117336,,False,acumulado de los lotes 1 a 6 (32 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,8,desempeno,precision,,0.947368,,False,acumulado de los lotes 1 a 6 (32 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,8,desempeno,recall,,0.666667,,False,acumulado de los lotes 1 a 6 (32 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,8,desempeno,roc_auc,,0.811111,0.5,False,acumulado de los lotes 1 a 6 (32 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,8,modelo,pct_aplicar,,0.333333,,False,
+2026-11-25 21:19:53.950794+00:00,8,modelo,probabilidad_media,,0.600199,,False,
+2026-11-25 21:19:53.950794+00:00,8,modelo,psi_probabilidad,probabilidad,4.237751,0.25,False,p = 0.7164
+2026-11-25 21:19:53.950794+00:00,8,negocio,clarificantes_semana,,2.0,2.0,False,presupuesto: 2 por semana
+2026-11-25 21:19:53.950794+00:00,8,sistema,latencia_p95_ms,,8041.4175,500.0,True,
+2026-11-25 21:19:53.950794+00:00,8,sistema,pct_predicciones_faltantes,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,8,sistema,pct_respaldo,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,p_valor_chi2,con_microscopio,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,p_valor_chi2,temporada_alta,0.437857,0.05,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,p_valor_chi2,sin_generacion,1.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,p_valor_chi2,levadura_nueva,0.695033,0.05,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,p_valor_chi2,cepa,0.912078,0.05,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,p_valor_ks,generacion_levadura,0.373824,0.05,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,p_valor_ks,n_cocciones,1.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,p_valor_ks,carga_planta_14d,0.161874,0.05,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,p_valor_ks,coccion_dia_semana,0.289215,0.05,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,p_valor_ks,coccion_mes,0.000127,0.05,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_categoria_nueva,cepa,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_fuera_rango,n_cocciones,0.0,0.2,False,"rango del entrenamiento [0.9, 4]"
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_fuera_rango,coccion_mes,1.0,0.2,False,"rango del entrenamiento [1, 8]"
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_fuera_rango,coccion_dia_semana,0.0,0.2,False,"rango del entrenamiento [1, 6]"
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_fuera_rango,carga_planta_14d,0.0,0.2,False,"rango del entrenamiento [0, 15]"
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_fuera_rango,generacion_levadura,0.0,0.2,False,"rango del entrenamiento [0, 5]"
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_nulos,coccion_dia_semana,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_nulos,n_cocciones,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_nulos,carga_planta_14d,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_nulos,temporada_alta,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_nulos,cepa,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_nulos,con_microscopio,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_nulos,coccion_mes,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_nulos,sin_generacion,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_nulos,generacion_levadura,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,pct_nulos,levadura_nueva,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,9,datos,psi,sin_generacion,1.100991,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,9,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,9,datos,psi,levadura_nueva,0.622216,0.25,False,p = 0.6950
+2026-11-25 21:19:53.950794+00:00,9,datos,psi,n_cocciones,1.14095,0.25,False,p = 1.0000
+2026-11-25 21:19:53.950794+00:00,9,datos,psi,temporada_alta,4.926082,0.25,False,p = 0.4379
+2026-11-25 21:19:53.950794+00:00,9,datos,psi,carga_planta_14d,8.98051,0.25,False,p = 0.1619
+2026-11-25 21:19:53.950794+00:00,9,datos,psi,coccion_dia_semana,5.403728,0.25,False,p = 0.2892
+2026-11-25 21:19:53.950794+00:00,9,datos,psi,cepa,1.463402,0.25,False,p = 0.9121
+2026-11-25 21:19:53.950794+00:00,9,datos,psi,coccion_mes,6.615364,0.25,False,"p = 0.0001: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,9,datos,psi,generacion_levadura,4.931852,0.25,False,p = 0.3738
+2026-11-25 21:19:53.950794+00:00,9,desempeno,costo_por_lote_modelo,,34.298654,70.20721621621621,False,acumulado de los lotes 1 a 7 (37 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,9,desempeno,costo_por_lote_regla_estilo,,70.207216,,False,acumulado de los lotes 1 a 7 (37 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,9,desempeno,costo_por_lote_sin_accion,,103.618932,,False,acumulado de los lotes 1 a 7 (37 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,9,desempeno,precision,,0.913043,,False,acumulado de los lotes 1 a 7 (37 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,9,desempeno,recall,,0.677419,,False,acumulado de los lotes 1 a 7 (37 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,9,desempeno,roc_auc,,0.709677,0.5,False,acumulado de los lotes 1 a 7 (37 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,9,modelo,pct_aplicar,,1.0,,False,
+2026-11-25 21:19:53.950794+00:00,9,modelo,probabilidad_media,,0.636638,,False,
+2026-11-25 21:19:53.950794+00:00,9,modelo,psi_probabilidad,probabilidad,6.572771,0.25,False,p = 0.2723
+2026-11-25 21:19:53.950794+00:00,9,negocio,clarificantes_semana,,2.0,2.0,False,presupuesto: 2 por semana
+2026-11-25 21:19:53.950794+00:00,9,sistema,latencia_p95_ms,,38.075,500.0,False,
+2026-11-25 21:19:53.950794+00:00,9,sistema,pct_predicciones_faltantes,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,9,sistema,pct_respaldo,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,p_valor_chi2,con_microscopio,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,p_valor_chi2,temporada_alta,0.033089,0.05,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,p_valor_chi2,sin_generacion,0.671778,0.05,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,p_valor_chi2,levadura_nueva,0.678825,0.05,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,p_valor_chi2,cepa,0.780375,0.05,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,p_valor_ks,generacion_levadura,6.5e-05,0.05,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,p_valor_ks,n_cocciones,0.923312,0.05,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,p_valor_ks,carga_planta_14d,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,p_valor_ks,coccion_dia_semana,0.785383,0.05,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,p_valor_ks,coccion_mes,0.0,0.05,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_categoria_nueva,cepa,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_fuera_rango,n_cocciones,0.0,0.2,False,"rango del entrenamiento [0.9, 4]"
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_fuera_rango,coccion_mes,1.0,0.2,False,"rango del entrenamiento [1, 8]"
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_fuera_rango,coccion_dia_semana,0.0,0.2,False,"rango del entrenamiento [1, 6]"
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_fuera_rango,carga_planta_14d,1.0,0.2,True,"rango del entrenamiento [0, 15]"
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_fuera_rango,generacion_levadura,0.0,0.2,False,"rango del entrenamiento [0, 5]"
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_nulos,coccion_dia_semana,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_nulos,n_cocciones,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_nulos,carga_planta_14d,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_nulos,temporada_alta,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_nulos,cepa,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_nulos,con_microscopio,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_nulos,coccion_mes,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_nulos,sin_generacion,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_nulos,generacion_levadura,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,pct_nulos,levadura_nueva,0.0,0.2,False,
+2026-11-25 21:19:53.950794+00:00,10,datos,psi,sin_generacion,1.100991,0.25,False,p = 0.6718
+2026-11-25 21:19:53.950794+00:00,10,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,10,datos,psi,levadura_nueva,1.091843,0.25,False,p = 0.6788
+2026-11-25 21:19:53.950794+00:00,10,datos,psi,n_cocciones,0.29298,0.25,False,p = 0.9233
+2026-11-25 21:19:53.950794+00:00,10,datos,psi,temporada_alta,4.926082,0.25,False,"p = 0.0331: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,10,datos,psi,carga_planta_14d,7.156254,0.25,True,p = 0.0000: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,10,datos,psi,coccion_dia_semana,3.67742,0.25,False,p = 0.7854
+2026-11-25 21:19:53.950794+00:00,10,datos,psi,cepa,0.843412,0.25,False,p = 0.7804
+2026-11-25 21:19:53.950794+00:00,10,datos,psi,coccion_mes,6.615364,0.25,False,"p = 0.0000: cambio esperado (variable de calendario, no alerta)"
+2026-11-25 21:19:53.950794+00:00,10,datos,psi,generacion_levadura,8.020864,0.25,True,p = 0.0001: cambio de distribución confirmado
+2026-11-25 21:19:53.950794+00:00,10,desempeno,costo_por_lote_modelo,,36.792405,65.942,False,acumulado de los lotes 1 a 8 (43 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,10,desempeno,costo_por_lote_regla_estilo,,65.942,,False,acumulado de los lotes 1 a 8 (43 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,10,desempeno,costo_por_lote_sin_accion,,94.691616,,False,acumulado de los lotes 1 a 8 (43 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,10,desempeno,precision,,0.84,,False,acumulado de los lotes 1 a 8 (43 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,10,desempeno,recall,,0.6,,False,acumulado de los lotes 1 a 8 (43 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,10,desempeno,roc_auc,,0.567857,0.5,False,acumulado de los lotes 1 a 8 (43 lotes de cerveza)
+2026-11-25 21:19:53.950794+00:00,10,modelo,pct_aplicar,,0.0,,False,
+2026-11-25 21:19:53.950794+00:00,10,modelo,probabilidad_media,,0.510283,,False,
+2026-11-25 21:19:53.950794+00:00,10,modelo,psi_probabilidad,probabilidad,8.698598,0.25,True,p = 0.0000
+2026-11-25 21:19:53.950794+00:00,10,negocio,clarificantes_semana,,0.0,2.0,False,presupuesto: 2 por semana
+2026-11-25 21:19:53.950794+00:00,10,sistema,latencia_p95_ms,,30.0275,500.0,False,
+2026-11-25 21:19:53.950794+00:00,10,sistema,pct_predicciones_faltantes,,0.0,0.0,False,
+2026-11-25 21:19:53.950794+00:00,10,sistema,pct_respaldo,,0.0,0.0,False,
