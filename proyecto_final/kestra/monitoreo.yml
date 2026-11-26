@@ -87,12 +87,10 @@ triggers:
     type: io.kestra.plugin.core.trigger.Flow
     inputs:
       lotes: todos
-    preconditions:
-      id: produccion_terminada
-      flows:
-        - namespace: cerveceria.pset2
-          flowId: produccion_lotes
-          states: [SUCCESS]
+    dependsOn:
+      - namespace: cerveceria.pset2
+        flowId: produccion_lotes
+        states: [SUCCESS]
 
 errors:
   - id: alerta_falla_monitoreo
@@ -101,4 +99,3 @@ errors:
     message: |
       FALLA EN EL MONITOREO
       Ejecución: {{ execution.id }} | Lotes: {{ inputs.lotes }}
-      
