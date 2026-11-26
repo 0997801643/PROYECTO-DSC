@@ -12,8 +12,9 @@ Qué hace:
 4. Calcula el umbral del challenger con la misma regla del champion: k = 2 lotes por semana.
 5. Compara ambos modelos en la ventana de evaluación: ROC-AUC, costo de negocio por lote y
    clarificantes por semana.
-6. Registra el challenger en MLflow (nueva versión con alias @challenger) y deja una
-   RECOMENDACIÓN. NO promueve nada: la promoción la decide una persona en Kestra (Pause).
+6. Aplica la regla de promoción (costo y ROC-AUC contra la variación entre pliegues de la
+   CV del champion), registra el challenger en MLflow (tag fase=reentrenamiento y motivo del
+   disparo; nueva versión con alias @challenger) y deja una RECOMENDACIÓN. NO promueve nada: la promoción la decide una persona en Kestra (Pause).
 
 Uso:
 - Desde Kestra (flujo reentrenamiento): python -m src.reentrenar
@@ -41,8 +42,10 @@ except ImportError:
 
 NOMBRE_MODELO = "merma-cerveza-modelo"
 TABLA_OBT = "CERVECERIA_DB.OBT.OBT_MERMA_LOTES"
+# CV del champion en el PSet 3 (corrida de tuning logistica_cfg10, run c23cd8ce391b40ad8ae61339df3a1f1a,
+# la configuración que se reentrenó como versión 1). La corrida final de la versión 1 no guarda la CV.
+CV_CHAMPION_PSET3 = {"cv_costo_std": 20.866924, "cv_roc_auc_std": 0.122842}
 K_LOTES_SEMANA = 2          # presupuesto de clarificante: 2 lotes por semana
-TOLERANCIA_ROC = 0.02       # el challenger puede perder hasta 0,02 de ROC-AUC si baja el costo
 
 
 # ---------------------------------------------------------------------------
@@ -128,18 +131,24 @@ def evaluar(modelo, umbral, evaluacion):
     }
 
 
-def recomendar(champ, chall):
-    """Regla de la recomendación (la decisión final es humana)."""
-    mejor_costo = chall["costo_por_lote"] <= champ["costo_por_lote"]
-    if np.isnan(chall["roc_auc"]) or np.isnan(champ["roc_auc"]):
-        roc_ok = True                     # sin las dos clases en la ventana no se puede comparar ROC-AUC
-    else:
-        roc_ok = chall["roc_auc"] >= champ["roc_auc"] - TOLERANCIA_ROC
-    if mejor_costo and roc_ok:
-        return "PROMOVER", "el challenger tiene menor o igual costo y no pierde ROC-AUC"
-    if not mejor_costo:
-        return "MANTENER", "el challenger cuesta más por lote que el champion"
-    return "MANTENER", f"el challenger pierde más de {TOLERANCIA_ROC} de ROC-AUC"
+def recomendar(champ, chall, cv_costo_std, cv_roc_std):
+    """Regla de promoción (sección 4 del PSet 4). La decisión final es humana.
+
+    El challenger se recomienda solo si, en la MISMA ventana de evaluación:
+    1. su costo por lote es menor que el del champion por MÁS de una desviación estándar
+       del costo en la CV del champion (PSet 3), y
+    2. su ROC-AUC no cae más de una desviación estándar del ROC-AUC en esa CV.
+    Una diferencia menor que la variación entre pliegues se considera ruido.
+    """
+    ahorro = champ["costo_por_lote"] - chall["costo_por_lote"]
+    if ahorro <= cv_costo_std:
+        return "MANTENER", (f"el challenger ahorra {ahorro:.2f} USD/lote; hace falta más de "
+                            f"{cv_costo_std:.2f} (1 desv. de la CV)")
+    if not (np.isnan(chall["roc_auc"]) or np.isnan(champ["roc_auc"])) and \
+            chall["roc_auc"] < champ["roc_auc"] - cv_roc_std:
+        return "MANTENER", f"el challenger pierde más de {cv_roc_std:.3f} de ROC-AUC (1 desv. de la CV)"
+    return "PROMOVER", (f"el challenger ahorra {ahorro:.2f} USD/lote, más que 1 desv. de la CV "
+                        f"({cv_costo_std:.2f})")
 
 
 # ---------------------------------------------------------------------------
@@ -148,6 +157,8 @@ def recomendar(champ, chall):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--semanas-evaluacion", type=int, default=6)
+    parser.add_argument("--motivo", default="calendario",
+                        help="Qué disparó el reentrenamiento (queda como tag en MLflow)")
     args = parser.parse_args()
 
     mlflow = P.configurar_mlflow()
@@ -159,6 +170,10 @@ def main():
     v_champ = client.get_model_version_by_alias(NOMBRE_MODELO, "champion")
     champion = mlflow.sklearn.load_model(f"models:/{NOMBRE_MODELO}/{v_champ.version}")
     umbral_champ = float(v_champ.tags.get("umbral_decision", "0.5"))
+    # Variación entre pliegues de la CV del champion (PSet 3): base de la regla de promoción
+    cv = {**CV_CHAMPION_PSET3, **client.get_run(v_champ.run_id).data.metrics}
+    cv_costo_std = float(cv["cv_costo_std"])
+    cv_roc_std = float(cv["cv_roc_auc_std"])
 
     # 2) Datos recientes y ventana de evaluación
     df = P.agregar_features(leer_obt())
@@ -172,7 +187,7 @@ def main():
     # 4) Comparación en la ventana que ninguno de los dos vio
     m_champ = evaluar(champion, umbral_champ, evaluacion)
     m_chall = evaluar(challenger, umbral_chall, evaluacion)
-    recomendacion, motivo = recomendar(m_champ, m_chall)
+    recomendacion, motivo = recomendar(m_champ, m_chall, cv_costo_std, cv_roc_std)
 
     # 5) Registro en MLflow
     fecha = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
@@ -190,11 +205,14 @@ def main():
             "n_entrenamiento": len(entrenamiento),
             "n_evaluacion": len(evaluacion),
             "umbral_decision": round(umbral_chall, 6),
+            "cv_costo_std_champion": round(cv_costo_std, 4),
+            "cv_roc_auc_std_champion": round(cv_roc_std, 4),
         })
         mlflow.log_metrics({**{f"challenger_{k}": v for k, v in m_chall.items() if not pd.isna(v)},
                             **{f"champion_{k}": v for k, v in m_champ.items() if not pd.isna(v)}})
         mlflow.set_tags({"fase": "reentrenamiento", "familia": type(challenger.named_steps["modelo"]).__name__,
-                         "commit_git": P.commit_git(), "recomendacion": recomendacion})
+                         "commit_git": P.commit_git(), "recomendacion": recomendacion,
+                         "motivo_disparo": args.motivo})
         mlflow.sklearn.log_model(
             challenger, "modelo",
             signature=infer_signature(X_tr, challenger.predict(X_tr)),
@@ -209,6 +227,7 @@ def main():
         "origen": "reentrenamiento",
         "comparado_con": f"versión {v_champ.version} (champion)",
         "recomendacion": recomendacion,
+        "motivo_disparo": args.motivo,
     }
     for clave, valor in etiquetas.items():
         client.set_model_version_tag(NOMBRE_MODELO, nueva.version, clave, valor)

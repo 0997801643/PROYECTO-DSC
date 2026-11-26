@@ -1,0 +1,5 @@
+subgrupo,lotes,tasa_merma_alta,roc_auc,recall_umbral,tasa_aplicar_umbral,tasa_aplicar_top2,usd_lote_modelo_umbral,usd_lote_sin_accion
+cepa = K-97,4,0.75,1.0,1.0,0.75,0.5,0.0,154.81
+cepa = US-05,5,1.0,,0.6,0.6,0.4,50.87,90.1
+cepa = W34/70,36,0.778,0.446,0.571,0.583,0.389,37.58,88.95
+con_microscopio = 1.0,45,0.8,0.525,0.611,0.6,0.4,35.71,94.93

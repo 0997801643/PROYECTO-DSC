@@ -1,0 +1,13 @@
+periodo,politica,costo_total_usd,costo_por_lote_usd,clarificantes_usados,semanas_sobre_presupuesto,merma_alta_detectada,clarificante_innecesario,ahorro_vs_hoy_usd
+"semanas normales (1-9), 45 lotes",sin acción (hoy),4272.0,94.93,0,0,0 de 36,0,0.0
+"semanas normales (1-9), 45 lotes",regla por estilo (PSet 1),3035.77,67.46,6,0,6 de 36,0,1236.23
+"semanas normales (1-9), 45 lotes","modelo, umbral fijo",1607.13,35.71,27,5,22 de 36,5,2664.87
+"semanas normales (1-9), 45 lotes","modelo, top-2 por semana",2705.71,60.13,18,0,14 de 36,4,1566.29
+"semana con deriva (10), 6 lotes",sin acción (hoy),452.83,75.47,0,0,0 de 5,0,0.0
+"semana con deriva (10), 6 lotes",regla por estilo (PSet 1),452.83,75.47,0,0,0 de 5,0,0.0
+"semana con deriva (10), 6 lotes","modelo, umbral fijo",452.83,75.47,0,0,0 de 5,0,0.0
+"semana con deriva (10), 6 lotes","modelo, top-2 por semana",173.79,28.96,2,0,2 de 5,0,279.04
+"todas (1-10), 51 lotes",sin acción (hoy),4724.84,92.64,0,0,0 de 41,0,0.0
+"todas (1-10), 51 lotes",regla por estilo (PSet 1),3488.6,68.4,6,0,6 de 41,0,1236.24
+"todas (1-10), 51 lotes","modelo, umbral fijo",2059.97,40.39,27,5,22 de 41,5,2664.87
+"todas (1-10), 51 lotes","modelo, top-2 por semana",2879.5,56.46,20,0,16 de 41,4,1845.34

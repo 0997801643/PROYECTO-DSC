@@ -3,6 +3,8 @@ namespace: cerveceria.pset2
 
 description: |
   Reentrenamiento con aprobación humana (sección 7 del PSet 4).
+  Se dispara por calendario (día 2 de cada mes) o a mano cuando el monitoreo muestra una caída
+  de desempeño (input "motivo").
   1. Entrena un challenger con los datos más recientes de la OBT (mismo pipeline y mismos
      hiperparámetros del champion) y lo compara con el champion en las últimas semanas con etiqueta.
   2. Se PAUSA y espera que una persona revise la comparación y decida (botón Resume).
@@ -14,6 +16,10 @@ inputs:
     type: INT
     defaults: 6
     description: Últimas semanas con etiqueta que se usan para comparar champion y challenger
+  - id: motivo
+    type: STRING
+    defaults: manual
+    description: 'Qué disparó el reentrenamiento, por ejemplo "alerta de desempeño lote 10" o "calendario"'
 
 tasks:
   - id: entrenar
@@ -44,7 +50,7 @@ tasks:
         commands:
           - export SNOWFLAKE_PRIVATE_KEY_PATH="$PWD/rsa_key.p8"
           - cd repo/proyecto_final
-          - python -m src.reentrenar --semanas-evaluacion {{ inputs.semanas_evaluacion }}
+          - python -m src.reentrenar --semanas-evaluacion {{ inputs.semanas_evaluacion }} --motivo "{{ inputs.motivo }}"
 
   - id: resumen
     type: io.kestra.plugin.core.log.Log
@@ -72,6 +78,10 @@ tasks:
         type: STRING
         defaults: sin nombre
         description: Quién aprueba o rechaza
+      - id: comentario
+        type: STRING
+        defaults: sin comentario
+        description: Motivo de la decisión (queda como tag en MLflow)
 
   - id: aplicar_decision
     type: io.kestra.plugin.core.flow.If
@@ -86,6 +96,7 @@ tasks:
           MLFLOW_TRACKING_URI: http://host.docker.internal:5050
           NUEVA: "{{ outputs.entrenar_challenger.vars.challenger_version }}"
           RESPONSABLE: "{{ outputs.aprobacion.onResume.responsable }}"
+          COMENTARIO: "{{ outputs.aprobacion.onResume.comentario }}"
         script: |
           import os
           from datetime import datetime, timezone
@@ -100,6 +111,7 @@ tasks:
           client.set_registered_model_alias(nombre, "champion", nueva)
           client.delete_registered_model_alias(nombre, "challenger")
           client.set_model_version_tag(nombre, nueva, "aprobado_por", os.environ["RESPONSABLE"])
+          client.set_model_version_tag(nombre, nueva, "motivo_aprobacion", os.environ["COMENTARIO"])
           client.set_model_version_tag(nombre, nueva, "fecha_promocion",
                                        datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"))
           print(f"Promovido: versión {nueva} ahora es @champion; versión {anterior} queda en @anterior")
@@ -119,10 +131,31 @@ tasks:
           Compruébalo en http://localhost:8000/modelo (la API también recarga sola cada 30 s).
           Para volver atrás: ejecutar el flujo rollback_modelo.
     else:
+      - id: registrar_rechazo
+        type: io.kestra.plugin.scripts.python.Script
+        taskRunner:
+          type: io.kestra.plugin.scripts.runner.docker.Docker
+        containerImage: api-merma:local
+        env:
+          MLFLOW_TRACKING_URI: http://host.docker.internal:5050
+          NUEVA: "{{ outputs.entrenar_challenger.vars.challenger_version }}"
+          RESPONSABLE: "{{ outputs.aprobacion.onResume.responsable }}"
+          COMENTARIO: "{{ outputs.aprobacion.onResume.comentario }}"
+        script: |
+          import os
+          from mlflow import MlflowClient
+
+          nombre = "merma-cerveza-modelo"
+          client = MlflowClient()
+          client.set_model_version_tag(nombre, os.environ["NUEVA"], "rechazado_por", os.environ["RESPONSABLE"])
+          client.set_model_version_tag(nombre, os.environ["NUEVA"], "motivo_rechazo", os.environ["COMENTARIO"])
+          print(f"Rechazo registrado en la versión {os.environ['NUEVA']}: {os.environ['COMENTARIO']}")
+
       - id: rechazado
         type: io.kestra.plugin.core.log.Log
         message: |
-          RECHAZADO por {{ outputs.aprobacion.onResume.responsable }}: el champion
+          RECHAZADO por {{ outputs.aprobacion.onResume.responsable }}
+          ({{ outputs.aprobacion.onResume.comentario }}): el champion
           (versión {{ outputs.entrenar_challenger.vars.champion_version }}) sigue en producción.
           El challenger (versión {{ outputs.entrenar_challenger.vars.challenger_version }}) queda
           registrado en MLflow con el alias @challenger.
@@ -141,3 +174,5 @@ triggers:
   - id: mensual
     type: io.kestra.plugin.core.trigger.Schedule
     cron: "0 7 2 * *"
+    inputs:
+      motivo: calendario mensual
