@@ -6,6 +6,9 @@ description: |
   Para cada lote de simulación calcula métricas de datos, modelo, desempeño (con la merma
   real que llega con 2 semanas de retraso), sistema y negocio; las guarda en Snowflake
   (PRODUCCION.MONITOREO) y, si alguna supera su umbral, dispara una alerta en el log.
+  Corre solo cada vez que termina bien produccion_lotes (trigger de tipo Flow).
+  Si el ROC-AUC por lote cae bajo media − 2 desv. de la CV en 2 lotes etiquetados seguidos,
+  lanza el flujo reentrenamiento con ese motivo (disparo por métrica, sección 7.1).
 
 inputs:
   - id: lotes
@@ -57,6 +60,40 @@ tasks:
         type: io.kestra.plugin.core.log.Log
         message: "Monitoreo sin alertas."
 
+  # Disparo del reentrenamiento por métrica (sección 7.1): no espera a que termine,
+  # porque el reentrenamiento se queda en pausa hasta que una persona apruebe o rechace.
+  - id: revisar_reentrenamiento
+    type: io.kestra.plugin.core.flow.If
+    condition: "{{ outputs.calcular_metricas.vars.disparar_reentrenamiento == 'si' }}"
+    then:
+      - id: aviso_reentrenamiento
+        type: io.kestra.plugin.core.log.Log
+        level: WARN
+        message: |
+          REENTRENAMIENTO SOLICITADO POR EL MONITOREO
+          Motivo: {{ outputs.calcular_metricas.vars.motivo_reentrenamiento }}
+      - id: lanzar_reentrenamiento
+        type: io.kestra.plugin.core.flow.Subflow
+        namespace: cerveceria.pset2
+        flowId: reentrenamiento
+        wait: false
+        inputs:
+          motivo: "{{ outputs.calcular_metricas.vars.motivo_reentrenamiento }}"
+          semanas_evaluacion: 6
+
+# Corre automáticamente después de cada ejecución exitosa de produccion_lotes
+triggers:
+  - id: despues_de_cada_lote
+    type: io.kestra.plugin.core.trigger.Flow
+    inputs:
+      lotes: todos
+    preconditions:
+      id: produccion_terminada
+      flows:
+        - namespace: cerveceria.pset2
+          flowId: produccion_lotes
+          states: [SUCCESS]
+
 errors:
   - id: alerta_falla_monitoreo
     type: io.kestra.plugin.core.log.Log
@@ -64,3 +101,4 @@ errors:
     message: |
       FALLA EN EL MONITOREO
       Ejecución: {{ execution.id }} | Lotes: {{ inputs.lotes }}
+      

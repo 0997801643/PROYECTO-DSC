@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: kestra
       POSTGRES_USER: kestra
-      POSTGRES_PASSWORD: k3str4
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}          # en el .env, no en el repositorio
     volumes:
       - datos_postgres:/var/lib/postgresql
 
@@ -25,12 +25,12 @@ services:
             url: jdbc:postgresql://postgres:5432/kestra
             driverClassName: org.postgresql.Driver
             username: kestra
-            password: k3str4
+            password: ${POSTGRES_PASSWORD}
         kestra:
           server:
             basic-auth:
               username: admin@kestra.io
-              password: Admin1234
+              password: ${KESTRA_ADMIN_PASSWORD}
           repository:
             type: postgres
           storage:
@@ -64,11 +64,13 @@ services:
     restart: unless-stopped
 
   # API de predicción (sección 2 del PSet 4)
+  # Usa la imagen que publica el CD en GHCR (sección 7.3). Para construirla en local:
+  #   docker build -f api/Dockerfile -t ghcr.io/0997801643/api-merma:latest .
   api:
     build:
       context: .
       dockerfile: api/Dockerfile
-    image: api-merma:local
+    image: ghcr.io/0997801643/api-merma:latest
     env_file: .env
     environment:
       MLFLOW_TRACKING_URI: http://mlflow:5000        # red interna de Docker
@@ -89,7 +91,7 @@ services:
     build:
       context: .
       dockerfile: monitoreo/Dockerfile
-    image: tablero-merma:local
+    image: ghcr.io/0997801643/tablero-merma:latest
     env_file: .env
     environment:
       SNOWFLAKE_PRIVATE_KEY_PATH: /keys/rsa_key.p8
@@ -98,10 +100,17 @@ services:
     ports:
       - "8501:8501"
 
-  # dbt y Spark corren dentro del flujo de Kestra (ingesta.yml).
-  # Se dejan aquí, en el perfil "manual", solo para correrlos a mano si hace falta:
+  # Spark: el servicio se levanta con el compose y verifica la instalación (spark-submit --version).
+  # El trabajo real (construir la OBT) lo lanza Kestra en cada ingesta (ingesta.yml) con esta
+  # misma imagen. Para correrlo a mano:  docker compose --profile manual run --rm spark-obt
+  spark:
+    image: spark:3.5.1-python3
+    user: root
+    entrypoint: ["/opt/spark/bin/spark-submit", "--version"]
+    restart: "no"
+
+  # dbt también corre dentro de Kestra (ingesta.yml). A mano:
   #   docker compose --profile manual run --rm dbt build
-  #   docker compose --profile manual run --rm spark
   dbt:
     image: ghcr.io/dbt-labs/dbt-snowflake:1.9.latest
     profiles: ["manual"]
@@ -114,7 +123,7 @@ services:
       - ./dbt:/usr/app
       - ./keys:/keys:ro
 
-  spark:
+  spark-obt:
     image: spark:3.5.1-python3
     profiles: ["manual"]
     user: root

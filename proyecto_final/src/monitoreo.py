@@ -11,10 +11,14 @@ Para cada lote de simulación (una semana de cocción) calcula y guarda en Snowf
              probabilidades contra las del entrenamiento.
 - DESEMPEÑO: con las etiquetas reales (la merma) que llegan con RETRASO_ETIQUETAS semanas:
              ROC-AUC, recall, precisión y costo por lote (modelo vs. regla por estilo vs. no hacer nada).
-- SISTEMA:   latencia p95, % de respuestas con el respaldo y % de predicciones faltantes (errores).
+             Además, ROC-AUC POR LOTE contra la CV del champion (PSet 3): si cae bajo
+             media − 2 desv. en 2 lotes etiquetados seguidos, se pide un reentrenamiento.
+- SISTEMA:   volumen de predicciones, latencia p50 y p95, % de respuestas con el respaldo y
+             % de predicciones faltantes (errores).
 - NEGOCIO:   clarificantes recomendados en la semana vs. el presupuesto (k = 2).
 
-Si una métrica supera su umbral, se marca ALERTA y se informa a Kestra (n_alertas, alertas).
+Si una métrica supera su umbral, se marca ALERTA y se informa a Kestra (n_alertas, alertas,
+disparar_reentrenamiento y motivo_reentrenamiento).
 
 Uso:
   En Kestra (contenedor api-merma:local):   python monitoreo.py --lotes todos
@@ -48,6 +52,12 @@ CALENDARIO = ["coccion_mes", "temporada_alta"]
 
 K_LOTES_SEMANA = 2          # presupuesto de clarificante (lotes por semana)
 RETRASO_ETIQUETAS = 2       # la merma real se conoce 2 semanas después de la cocción
+
+# Deriva conceptual: ROC-AUC por lote contra la CV del champion en el PSet 3
+# (corrida de tuning logistica_cfg10, la configuración de la versión 1).
+CV_ROC_MEDIA, CV_ROC_STD = 0.635, 0.123
+LIMITE_ROC_LOTE = CV_ROC_MEDIA - 2 * CV_ROC_STD      # 0,389
+N_LOTES_SEGUIDOS = 2        # lotes etiquetados seguidos bajo el límite para pedir reentrenamiento
 
 # Umbrales de alerta
 UMBRAL = {
@@ -191,6 +201,35 @@ def guardar(con, filas, lotes):
 
 
 # ---------------------------------------------------------------------------
+# Métrica técnica por lote y regla de reentrenamiento
+# ---------------------------------------------------------------------------
+def roc_auc_lote(pred, sim, lote):
+    """ROC-AUC de UN lote de simulación con su merma real (NaN si el lote no tiene las dos clases)."""
+    datos = (pred[pred["lote_simulacion"] == lote]
+             .merge(sim[["lote_simulacion", "numero_documento", "merma_alta"]],
+                    on=["lote_simulacion", "numero_documento"]))
+    y = datos["merma_alta"].astype(int)
+    if y.nunique() < 2:
+        return np.nan
+    from sklearn.metrics import roc_auc_score
+    return float(roc_auc_score(y, datos["probabilidad"]))
+
+
+def regla_reentrenamiento(pred, sim, ultimo_lote):
+    """Pide reentrenar si los últimos N lotes CON etiqueta (y con ROC-AUC calculable) quedaron
+    bajo el límite de la CV. La deriva de datos sola no dispara: tiene que caer el desempeño."""
+    hasta = ultimo_lote - RETRASO_ETIQUETAS
+    rocs = [(l, roc_auc_lote(pred, sim, l)) for l in range(1, hasta + 1)]
+    rocs = [(l, r) for l, r in rocs if not np.isnan(r)]
+    ultimos = rocs[-N_LOTES_SEGUIDOS:]
+    if len(ultimos) == N_LOTES_SEGUIDOS and all(r < LIMITE_ROC_LOTE for _, r in ultimos):
+        detalle = ", ".join(f"lote {l}: {r:.2f}" for l, r in ultimos)
+        return True, (f"desempeño: ROC-AUC bajo {LIMITE_ROC_LOTE:.3f} (media CV − 2 desv.) "
+                      f"en {N_LOTES_SEGUIDOS} lotes seguidos ({detalle}), detectado en el lote {ultimo_lote}")
+    return False, ""
+
+
+# ---------------------------------------------------------------------------
 # Métricas de un lote
 # ---------------------------------------------------------------------------
 def metricas_lote(lote, pred, ref, sim, linea_base):
@@ -260,11 +299,18 @@ def metricas_lote(lote, pred, ref, sim, linea_base):
         agregar("desempeno", "costo_por_lote_modelo", c_modelo, c_regla, c_modelo > c_regla, detalle=detalle)
         agregar("desempeno", "costo_por_lote_regla_estilo", c_regla, detalle=detalle)
         agregar("desempeno", "costo_por_lote_sin_accion", c_nada, detalle=detalle)
+        # Métrica técnica DEL LOTE que acaba de recibir su etiqueta, contra la CV del PSet 3
+        roc_lote = roc_auc_lote(pred, sim, hasta)
+        if not np.isnan(roc_lote):
+            agregar("desempeno", "roc_auc_lote", roc_lote, LIMITE_ROC_LOTE, roc_lote < LIMITE_ROC_LOTE,
+                    detalle=f"lote {hasta}; CV del PSet 3: {CV_ROC_MEDIA} ± {CV_ROC_STD} (límite media − 2 desv.)")
     else:
         agregar("desempeno", "sin_etiquetas", None,
                 detalle=f"la merma real llega {RETRASO_ETIQUETAS} semanas después")
 
     # --- SISTEMA ---
+    agregar("sistema", "volumen_predicciones", len(act), detalle=f"{len(esperadas)} lotes de cerveza esperados")
+    agregar("sistema", "latencia_p50_ms", act["latencia_ms"].quantile(0.50))
     p95 = act["latencia_ms"].quantile(0.95)
     agregar("sistema", "latencia_p95_ms", p95, UMBRAL["latencia_p95_ms"], p95 > UMBRAL["latencia_p95_ms"])
     respaldo = act["respaldo"].astype(bool).mean()
@@ -323,6 +369,7 @@ def main():
         filas = [f for lote in lotes for f in metricas_lote(lote, pred, ref, sim, linea_base)]
         guardar(con, filas, lotes)
 
+    disparar, motivo = regla_reentrenamiento(pred, sim, max(lotes))
     alertas = [f for f in filas if f["alerta"]]
     print(f"{len(filas)} métricas guardadas en {TABLA_MON} para los lotes {lotes}")
     for f in alertas:
@@ -330,7 +377,11 @@ def main():
               f"{f['valor']:.3f} (umbral {f['umbral']}) {f['detalle']}")
     resumen = "; ".join(f"lote {f['lote']}: {f['metrica']} {f['variable']}".strip() for f in alertas)
     # Salidas para Kestra (outputs.<tarea>.vars)
-    print("::" + json.dumps({"outputs": {"n_alertas": len(alertas), "alertas": resumen or "ninguna"}}) + "::")
+    if disparar:
+        print(f"REENTRENAMIENTO SOLICITADO | {motivo}")
+    print("::" + json.dumps({"outputs": {"n_alertas": len(alertas), "alertas": resumen or "ninguna",
+                                         "disparar_reentrenamiento": "si" if disparar else "no",
+                                         "motivo_reentrenamiento": motivo or "ninguno"}}) + "::")
 
 
 if __name__ == "__main__":
