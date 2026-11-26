@@ -1,32 +1,35 @@
 fecha_ejecucion,lote_simulacion,tipo,metrica,variable,valor,umbral,alerta,detalle,severidad,quien_la_recibe,accion
-2026-11-25 21:19:53.950794+00:00,1,datos,psi,carga_planta_14d,6.443495,0.25,True,p = 0.0338: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,1,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,1,modelo,psi_probabilidad,probabilidad,5.56354,0.25,True,p = 0.0085,Media,Analista de datos,Revisar junto con la deriva de las features
-2026-11-25 21:19:53.950794+00:00,1,sistema,latencia_p95_ms,,1928.3,500.0,True,,Baja,Soporte de la API,Revisar arranque en frío y recursos
-2026-11-25 21:19:53.950794+00:00,2,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,2,modelo,psi_probabilidad,probabilidad,5.216115,0.25,True,p = 0.0020,Media,Analista de datos,Revisar junto con la deriva de las features
-2026-11-25 21:19:53.950794+00:00,2,negocio,clarificantes_semana,,5.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
-2026-11-25 21:19:53.950794+00:00,3,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,3,negocio,clarificantes_semana,,5.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
-2026-11-25 21:19:53.950794+00:00,4,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,5,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,5,datos,psi,levadura_nueva,1.725292,0.25,True,p = 0.0110: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,5,negocio,clarificantes_semana,,3.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
-2026-11-25 21:19:53.950794+00:00,6,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,6,datos,psi,carga_planta_14d,7.987857,0.25,True,p = 0.0139: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,6,negocio,clarificantes_semana,,3.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
-2026-11-25 21:19:53.950794+00:00,7,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,7,datos,psi,levadura_nueva,0.982125,0.25,True,p = 0.0363: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,7,datos,psi,carga_planta_14d,9.877406,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,7,negocio,clarificantes_semana,,4.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
-2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,generacion_levadura,0.5,0.2,True,,Media,Responsable de la bitácora,Completar el registro en planta
-2026-11-25 21:19:53.950794+00:00,8,datos,pct_nulos,levadura_nueva,0.5,0.2,True,,Media,Responsable de la bitácora,Completar el registro en planta
-2026-11-25 21:19:53.950794+00:00,8,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,8,datos,psi,carga_planta_14d,6.887658,0.25,True,p = 0.0015: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,8,sistema,latencia_p95_ms,,8041.4175,500.0,True,,Baja,Soporte de la API,Revisar arranque en frío y recursos
-2026-11-25 21:19:53.950794+00:00,9,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,10,datos,pct_fuera_rango,carga_planta_14d,1.0,0.2,True,"rango del entrenamiento [0, 15]",Alta,Analista de datos y jefe de producción,No usar el modelo esa semana; decidir con la regla por estilo
-2026-11-25 21:19:53.950794+00:00,10,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,10,datos,psi,carga_planta_14d,7.156254,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,10,datos,psi,generacion_levadura,8.020864,0.25,True,p = 0.0001: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-25 21:19:53.950794+00:00,10,modelo,psi_probabilidad,probabilidad,8.698598,0.25,True,p = 0.0000,Media,Analista de datos,Revisar junto con la deriva de las features
+2026-11-26 20:52:24.597403+00:00,1,datos,psi,carga_planta_14d,6.443495,0.25,True,p = 0.0338: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,1,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,1,modelo,psi_probabilidad,probabilidad,5.56354,0.25,True,p = 0.0085,Media,Analista de datos,Revisar junto con la deriva de las features
+2026-11-26 20:52:24.597403+00:00,1,sistema,latencia_p95_ms,,1928.3,500.0,True,,Baja,Soporte de la API,Revisar arranque en frío y recursos
+2026-11-26 20:52:24.597403+00:00,2,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,2,modelo,psi_probabilidad,probabilidad,5.216115,0.25,True,p = 0.0020,Media,Analista de datos,Revisar junto con la deriva de las features
+2026-11-26 20:52:24.597403+00:00,2,negocio,clarificantes_semana,,5.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
+2026-11-26 20:52:24.597403+00:00,3,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,3,negocio,clarificantes_semana,,5.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
+2026-11-26 20:52:24.597403+00:00,4,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,5,datos,psi,levadura_nueva,1.725292,0.25,True,p = 0.0110: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,5,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,5,negocio,clarificantes_semana,,3.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
+2026-11-26 20:52:24.597403+00:00,6,datos,psi,carga_planta_14d,7.987857,0.25,True,p = 0.0139: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,6,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,6,negocio,clarificantes_semana,,3.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
+2026-11-26 20:52:24.597403+00:00,7,datos,psi,carga_planta_14d,9.877406,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,7,datos,psi,levadura_nueva,0.982125,0.25,True,p = 0.0363: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,7,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,7,negocio,clarificantes_semana,,4.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
+2026-11-26 20:52:24.597403+00:00,8,datos,pct_nulos,generacion_levadura,0.5,0.2,True,,Media,Responsable de la bitácora,Completar el registro en planta
+2026-11-26 20:52:24.597403+00:00,8,datos,pct_nulos,levadura_nueva,0.5,0.2,True,,Media,Responsable de la bitácora,Completar el registro en planta
+2026-11-26 20:52:24.597403+00:00,8,datos,psi,carga_planta_14d,6.887658,0.25,True,p = 0.0015: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,8,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,8,sistema,latencia_p95_ms,,8041.4175,500.0,True,,Baja,Soporte de la API,Revisar arranque en frío y recursos
+2026-11-26 20:52:24.597403+00:00,9,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,9,desempeno,roc_auc_lote,,0.25,0.389,True,lote 7; CV del PSet 3: 0.635 ± 0.123 (límite media − 2 desv.),,,
+2026-11-26 20:52:24.597403+00:00,10,datos,pct_fuera_rango,carga_planta_14d,1.0,0.2,True,"rango del entrenamiento [0, 15]",Alta,Analista de datos y jefe de producción,No usar el modelo esa semana; decidir con la regla por estilo
+2026-11-26 20:52:24.597403+00:00,10,datos,psi,carga_planta_14d,7.156254,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,10,datos,psi,generacion_levadura,8.020864,0.25,True,p = 0.0001: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,10,datos,psi,con_microscopio,12.379643,0.25,True,p = 0.0000: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-26 20:52:24.597403+00:00,10,desempeno,roc_auc_lote,,0.0,0.389,True,lote 8; CV del PSet 3: 0.635 ± 0.123 (límite media − 2 desv.),,,
+2026-11-26 20:52:24.597403+00:00,10,modelo,psi_probabilidad,probabilidad,8.698598,0.25,True,p = 0.0000,Media,Analista de datos,Revisar junto con la deriva de las features
+2026-11-26 20:52:24.597403+00:00,10,sistema,latencia_p95_ms,,4610.705,500.0,True,,Baja,Soporte de la API,Revisar arranque en frío y recursos
