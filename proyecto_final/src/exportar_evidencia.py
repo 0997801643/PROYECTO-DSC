@@ -3,6 +3,7 @@ Exporta la evidencia del PSet 4 a docs/ en CSV (sección "Repositorio" del PSet 
 
 - docs/predicciones.csv      tabla PRODUCCION.PREDICCIONES de Snowflake
 - docs/monitoreo.csv         tabla PRODUCCION.MONITOREO de Snowflake
+- docs/solicitudes.csv       tabla PRODUCCION.SOLICITUDES de Snowflake (código HTTP de cada solicitud)
 - docs/alertas.csv           registro de alertas (MONITOREO con ALERTA = TRUE) + severidad,
                              quién la recibe y acción (plantilla de la sección 6.3)
 - docs/corridas.csv          todas las corridas del experimento de MLflow (mlflow.search_runs),
@@ -30,10 +31,16 @@ PLANTILLA = {
     "psi_probabilidad": ("Media", "Analista de datos", "Revisar junto con la deriva de las features"),
     "costo_por_lote_modelo": ("Alta", "Analista de datos", "Reentrenar si se repite 2 lotes seguidos"),
     "roc_auc": ("Alta", "Analista de datos", "Reentrenar; si persiste, modo respaldo"),
+    "roc_auc_lote": ("Alta", "Analista de datos",
+                     "Si se repite 2 lotes seguidos, el monitoreo lanza el reentrenamiento con aprobación humana"),
     "clarificantes_semana": ("Media", "Jefe de producción", "Aplicar solo a los 2 lotes de mayor probabilidad"),
     "latencia_p95_ms": ("Baja", "Soporte de la API", "Revisar arranque en frío y recursos"),
     "pct_respaldo": ("Alta", "Soporte de la API", "Revisar por qué el modelo no cargó"),
     "pct_predicciones_faltantes": ("Alta", "Soporte de la API", "Reenviar el lote y revisar Snowflake"),
+    "pct_errores_4xx": ("Media", "Soporte de la API",
+                        "Revisar qué campo falló (mensaje del 422) y corregir el envío o el esquema"),
+    "pct_errores_5xx": ("Alta", "Soporte de la API",
+                        "Revisar el log de la API; si se repite, activar MODO_RESPALDO"),
 }
 
 
@@ -50,8 +57,10 @@ def main():
     with conectar() as con:
         pred = consulta(con, "SELECT * FROM PRODUCCION.PREDICCIONES ORDER BY TIMESTAMP_PREDICCION")
         mon = consulta(con, "SELECT * FROM PRODUCCION.MONITOREO ORDER BY LOTE_SIMULACION, TIPO, METRICA")
+        sol = consulta(con, "SELECT * FROM PRODUCCION.SOLICITUDES ORDER BY TIMESTAMP_SOLICITUD")
     pred.to_csv(DOCS / "predicciones.csv", index=False)
     mon.to_csv(DOCS / "monitoreo.csv", index=False)
+    sol.to_csv(DOCS / "solicitudes.csv", index=False)
 
     alertas = mon[mon["alerta"].astype(bool)].copy()
     alertas["severidad"] = alertas["metrica"].map(lambda m: PLANTILLA.get(m, ("", "", ""))[0])
@@ -69,6 +78,7 @@ def main():
 
     print(f"predicciones.csv      {len(pred)} filas")
     print(f"monitoreo.csv         {len(mon)} filas")
+    print(f"solicitudes.csv       {len(sol)} filas")
     print(f"alertas.csv           {len(alertas)} alertas")
     print(f"corridas.csv          {len(corridas)} corridas")
     print(f"reentrenamientos.csv  {len(reentrenamientos)} corridas de reentrenamiento")

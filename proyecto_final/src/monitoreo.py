@@ -13,8 +13,9 @@ Para cada lote de simulación (una semana de cocción) calcula y guarda en Snowf
              ROC-AUC, recall, precisión y costo por lote (modelo vs. regla por estilo vs. no hacer nada).
              Además, ROC-AUC POR LOTE contra la CV del champion (PSet 3): si cae bajo
              media − 2 desv. en 2 lotes etiquetados seguidos, se pide un reentrenamiento.
-- SISTEMA:   volumen de predicciones, latencia p50 y p95, % de respuestas con el respaldo y
-             % de predicciones faltantes (errores).
+- SISTEMA:   volumen de predicciones y de solicitudes, latencia p50 y p95, tasa de errores 4xx y
+             5xx (de PRODUCCION.SOLICITUDES, que registra la API), % de respuestas con el respaldo
+             y % de predicciones faltantes.
 - NEGOCIO:   clarificantes recomendados en la semana vs. el presupuesto (k = 2).
 
 Si una métrica supera su umbral, se marca ALERTA y se informa a Kestra (n_alertas, alertas,
@@ -43,6 +44,7 @@ RUTA_LINEA_BASE = RAIZ / "api" / "linea_base.json"
 
 TABLA_PRED = "PRODUCCION.PREDICCIONES"
 TABLA_MON = "PRODUCCION.MONITOREO"
+TABLA_SOL = "PRODUCCION.SOLICITUDES"
 
 NUMERICAS = ["generacion_levadura", "n_cocciones", "coccion_mes", "coccion_dia_semana", "carga_planta_14d"]
 CATEGORICAS = ["levadura_nueva", "sin_generacion", "con_microscopio", "temporada_alta", "cepa"]
@@ -75,6 +77,8 @@ UMBRAL = {
     "latencia_p95_ms": 500.0,
     "respaldo": 0.0,             # cualquier respuesta con el respaldo
     "faltantes": 0.0,            # cualquier predicción que no llegó
+    "errores_4xx": 0.05,         # más del 5 % de solicitudes rechazadas (entrada inválida)
+    "errores_5xx": 0.0,          # cualquier error interno de la API
 }
 
 # Costos de la planta (los mismos de src/pipeline.py, PSet 3)
@@ -171,8 +175,8 @@ def leer_predicciones(con):
     """Última predicción de cada lote de cerveza en cada lote de simulación."""
     cur = con.cursor()
     cur.execute(f"""
-        SELECT LOTE_SIMULACION, NUMERO_DOCUMENTO, ENTRADAS, PROBABILIDAD, DECISION,
-               VERSION_MODELO, RESPALDO, LATENCIA_MS
+        SELECT LOTE_SIMULACION, NUMERO_DOCUMENTO, TIMESTAMP_PREDICCION, ENTRADAS, PROBABILIDAD,
+               DECISION, VERSION_MODELO, RESPALDO, LATENCIA_MS
         FROM {TABLA_PRED}
         WHERE LOTE_SIMULACION IS NOT NULL
         QUALIFY ROW_NUMBER() OVER (PARTITION BY LOTE_SIMULACION, NUMERO_DOCUMENTO
@@ -183,7 +187,37 @@ def leer_predicciones(con):
     pred = pd.concat([pred.drop(columns="entradas"),
                       entradas[NUMERICAS + CATEGORICAS + ["estilo"]]], axis=1)
     pred["numero_documento"] = pred["numero_documento"].astype(str)
+    pred["timestamp_prediccion"] = pd.to_datetime(pred["timestamp_prediccion"], utc=True)
     return pred
+
+
+def leer_solicitudes(con):
+    """Solicitudes a /predecir con su código HTTP y su lote (encabezado X-Lote-Simulacion).
+    Incluye las rechazadas (4xx) y las fallidas (5xx), que nunca llegan a PREDICCIONES."""
+    columnas = ["lote_simulacion", "timestamp_solicitud", "codigo"]
+    try:
+        cur = con.cursor()
+        cur.execute(f"""
+            SELECT LOTE_SIMULACION, TIMESTAMP_SOLICITUD, CODIGO
+            FROM {TABLA_SOL}
+            WHERE LOTE_SIMULACION IS NOT NULL AND RUTA = '/predecir'""")
+        sol = pd.DataFrame(cur.fetchall(), columns=columnas)
+    except Exception as e:   # la tabla aún no existe (la API todavía no registró solicitudes)
+        print(f"Sin solicitudes registradas en {TABLA_SOL}: {e}")
+        sol = pd.DataFrame(columns=columnas)
+    sol["timestamp_solicitud"] = pd.to_datetime(sol["timestamp_solicitud"], utc=True)
+    sol["codigo"] = pd.to_numeric(sol["codigo"])
+    return sol
+
+
+def solicitudes_del_lote(sol, act, lote):
+    """Solicitudes de la ÚLTIMA ejecución del lote. Si el lote se reenvió, las solicitudes viejas
+    se descartan: se cuentan desde 1 minuto antes de la primera predicción vigente del lote."""
+    s = sol[sol["lote_simulacion"] == lote]
+    if len(act) and len(s):
+        inicio = act["timestamp_prediccion"].min() - pd.Timedelta(minutes=1)
+        s = s[s["timestamp_solicitud"] >= inicio]
+    return s
 
 
 def guardar(con, filas, lotes):
@@ -237,7 +271,7 @@ def regla_reentrenamiento(pred, sim, ultimo_lote):
 # ---------------------------------------------------------------------------
 # Métricas de un lote
 # ---------------------------------------------------------------------------
-def metricas_lote(lote, pred, ref, sim, linea_base):
+def metricas_lote(lote, pred, ref, sim, linea_base, sol):
     filas = []
 
     def agregar(tipo, metrica, valor, umbral=None, alerta=False, variable="", detalle=""):
@@ -330,6 +364,18 @@ def metricas_lote(lote, pred, ref, sim, linea_base):
     faltantes = 1 - len(act) / max(len(esperadas), 1)
     agregar("sistema", "pct_predicciones_faltantes", faltantes, UMBRAL["faltantes"],
             faltantes > UMBRAL["faltantes"])
+    s = solicitudes_del_lote(sol, act, lote)
+    if len(s):
+        n_4xx = int(s["codigo"].between(400, 499).sum())
+        n_5xx = int(s["codigo"].between(500, 599).sum())
+        agregar("sistema", "volumen_solicitudes", len(s), detalle="solicitudes a /predecir del lote")
+        agregar("sistema", "pct_errores_4xx", n_4xx / len(s), UMBRAL["errores_4xx"],
+                n_4xx / len(s) > UMBRAL["errores_4xx"], detalle=f"{n_4xx} de {len(s)} solicitudes")
+        agregar("sistema", "pct_errores_5xx", n_5xx / len(s), UMBRAL["errores_5xx"],
+                n_5xx / len(s) > UMBRAL["errores_5xx"], detalle=f"{n_5xx} de {len(s)} solicitudes")
+    else:
+        agregar("sistema", "sin_solicitudes", None,
+                detalle=f"{TABLA_SOL} no tiene solicitudes de este lote")
 
     # --- NEGOCIO ---
     n_aplicar = int((act["decision"] == "aplicar_clarificante").sum())
@@ -376,9 +422,10 @@ def main():
 
     with conectar() as con:
         pred = leer_predicciones(con)
+        sol = leer_solicitudes(con)
         lotes = ([int(x) for x in sorted(pred["lote_simulacion"].unique())] if args.lotes == "todos"
                  else [int(x) for x in args.lotes.split(",")])
-        filas = [f for lote in lotes for f in metricas_lote(lote, pred, ref, sim, linea_base)]
+        filas = [f for lote in lotes for f in metricas_lote(lote, pred, ref, sim, linea_base, sol)]
         guardar(con, filas, lotes)
 
     disparar, motivo = regla_reentrenamiento(pred, sim, max(lotes))

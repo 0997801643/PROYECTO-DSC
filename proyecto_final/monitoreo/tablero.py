@@ -186,8 +186,17 @@ with izq:
     st.subheader("Sistema: latencia p95 (ms)")
     st.line_chart(pd.DataFrame({"latencia p95": serie(df, "sistema", "latencia_p95_ms"), "umbral": 500}))
 with der:
-    st.subheader("Sistema: respaldo y predicciones faltantes (%)")
+    st.subheader("Sistema: errores, respaldo y faltantes (%)")
+    st.caption("Errores 4xx (entrada inválida, umbral 5 %) y 5xx (error interno, umbral 0 %) sobre las "
+               "solicitudes a /predecir de cada lote.")
     st.line_chart(pd.DataFrame({
+        "% errores 4xx": serie(df, "sistema", "pct_errores_4xx") * 100,
+        "% errores 5xx": serie(df, "sistema", "pct_errores_5xx") * 100,
         "% con respaldo": serie(df, "sistema", "pct_respaldo") * 100,
         "% faltantes": serie(df, "sistema", "pct_predicciones_faltantes") * 100,
     }))
+st.subheader("Sistema: volumen por lote")
+st.bar_chart(pd.DataFrame({
+    "solicitudes": serie(df, "sistema", "volumen_solicitudes"),
+    "predicciones": serie(df, "sistema", "volumen_predicciones"),
+}))
