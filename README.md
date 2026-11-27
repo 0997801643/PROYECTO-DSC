@@ -42,6 +42,7 @@ proyecto_final/
 │   ├── pipeline.py             # Pipeline de scikit-learn y métricas
 │   ├── preparar_api.py         # umbral k = 2, línea base y fixtures de CI
 │   ├── preparar_simulacion.py  # 9 lotes semanales + 1 lote con deriva
+│   ├── cargar_lotes.py         # sube los lotes a PRODUCCION.LOTES_SIMULACION
 │   ├── monitoreo.py            # deriva (PSI, KS, chi²), alertas y métricas por lote
 │   ├── reentrenar.py           # challenger, comparación y regla de promoción
 │   ├── valor_negocio.py        # costo por política
@@ -138,10 +139,11 @@ python -m pytest tests -v     # 10 pruebas
 ### 4. Simulación
 
 ```bash
-python -m src.preparar_simulacion
+python -m src.preparar_simulacion    # genera data/simulacion/lotes_simulacion.csv
+python -m src.cargar_lotes           # lo sube a PRODUCCION.LOTES_SIMULACION
 ```
 
-En Kestra, ejecutar `produccion_lotes` con `lotes = todos`.
+En Kestra, ejecutar `produccion_lotes` con `lotes = todos`. El flujo lee cada lote desde Snowflake (solo las entradas del modelo; la merma la une el monitoreo 2 semanas después) y lo envía a la API.
 
 ### 5. Monitoreo
 

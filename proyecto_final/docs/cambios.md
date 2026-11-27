@@ -209,6 +209,12 @@ Calificación 100/100, sin observaciones.
 - **Por qué:** en la primera simulación hubo predicciones aisladas de 2 a 8 s con medianas por lote de 18 a 95 ms; esto elimina la causa más probable. `POST /recargar` sigue aplicando un rollback al instante.
 - **Archivos:** `api/main.py`.
 
+### Origen de los lotes de la simulación
+- **Antes:** `produccion_lotes` descargaba `lotes_simulacion.csv` desde GitHub.
+- **Ahora:** `src/cargar_lotes.py` sube los lotes a `PRODUCCION.LOTES_SIMULACION` y `produccion_lotes` los lee desde Snowflake, solo con las columnas de entrada del modelo.
+- **Por qué:** el PDF pide que el flujo lea cada lote de Snowflake. Leer solo las entradas respeta el horizonte: la merma real la une el monitoreo con 2 semanas de retraso.
+- **Archivos:** `src/cargar_lotes.py`, `kestra/produccion_lotes.yml`, `README.md`.
+
 ### Severidad de `roc_auc_lote`
 - **Antes:** sin plantilla; sus alertas salían sin severidad, responsable ni acción.
 - **Ahora:** Alta · analista de datos · si se repite 2 lotes seguidos, el monitoreo lanza el reentrenamiento con aprobación humana.

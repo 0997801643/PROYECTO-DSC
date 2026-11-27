@@ -3,9 +3,12 @@ namespace: cerveceria.pset2
 
 description: |
   Simulación de producción (sección 5 del PSet 4), patrón batch.
-  Cada lote de simulación es una semana de cocción. Para cada lote, el flujo envía sus
-  lotes de cerveza a la API (/predecir); la API devuelve la decisión y registra cada
-  predicción en Snowflake (PRODUCCION.PREDICCIONES) con su número de lote de simulación.
+  Cada lote de simulación es una semana de cocción. Para cada lote, el flujo lee sus lotes de
+  cerveza desde Snowflake (PRODUCCION.LOTES_SIMULACION, cargada con python -m src.cargar_lotes),
+  los envía a la API (/predecir) y la API devuelve la decisión y registra cada predicción en
+  PRODUCCION.PREDICCIONES con su número de lote de simulación.
+  Solo se leen las columnas de entrada del modelo: la merma real (el target) la une después el
+  monitoreo, con 2 semanas de retraso, para respetar el horizonte de predicción.
   El último lote es el de deriva inducida ("temporada alta extrema").
 
 inputs:
@@ -18,27 +21,30 @@ inputs:
     defaults: "http://host.docker.internal:8000"
     description: Dirección de la API vista desde los contenedores de Kestra
 
-variables:
-  url_lotes: https://raw.githubusercontent.com/0997801643/PROYECTO-DSC/main/proyecto_final/data/simulacion/lotes_simulacion.csv
-
 tasks:
-  - id: descargar_lotes
-    type: io.kestra.plugin.core.http.Download
-    uri: "{{ vars.url_lotes }}"
-
+  # Misma imagen de la API: ya trae el conector de Snowflake y cryptography (para la llave)
   - id: enviar_a_la_api
     type: io.kestra.plugin.scripts.python.Script
     taskRunner:
       type: io.kestra.plugin.scripts.runner.docker.Docker
-    containerImage: python:3.12-slim
+    containerImage: api-merma:local
     inputFiles:
-      lotes.csv: "{{ outputs.descargar_lotes.uri }}"
+      rsa_key.p8: "{{ secret('SNOWFLAKE_PRIVATE_KEY') }}"
     env:
       LOTES: "{{ inputs.lotes }}"
       API_URL: "{{ inputs.api_url }}"
+      SNOWFLAKE_ACCOUNT: "{{ envs.snowflake_account }}"
+      SNOWFLAKE_USER: "{{ envs.snowflake_user }}"
+      SNOWFLAKE_ROLE: "{{ envs.snowflake_role }}"
+      SNOWFLAKE_WAREHOUSE: "{{ envs.snowflake_warehouse }}"
+      SNOWFLAKE_DATABASE: "{{ envs.snowflake_database }}"
     script: |
-      import csv, json, os, sys, urllib.error, urllib.request
+      import json, math, os, sys, urllib.error, urllib.request
       from collections import defaultdict
+      from pathlib import Path
+
+      import snowflake.connector
+      from cryptography.hazmat.primitives import serialization
 
       URL = os.environ["API_URL"].rstrip("/") + "/predecir"
       ENTEROS = ["coccion_mes", "coccion_dia_semana", "carga_planta_14d",
@@ -46,25 +52,45 @@ tasks:
       DECIMALES = ["generacion_levadura", "n_cocciones"]
 
       def numero(valor, entero):
-          if valor in ("", "nan", "NaN", None):
+          if valor is None or (isinstance(valor, float) and math.isnan(valor)):
               return None                      # dato faltante -> null (lo imputa el pipeline)
           x = float(valor)
           return int(round(x)) if entero else x
 
-      with open("lotes.csv", encoding="utf-8") as f:
-          filas = list(csv.DictReader(f))
+      # 1) Leer los lotes pedidos desde Snowflake (solo entradas del modelo, sin la merma)
+      pedidos = os.environ["LOTES"].strip().lower()
+      filtro = "" if pedidos == "todos" else \
+          "WHERE LOTE_SIMULACION IN (" + ",".join(str(int(x)) for x in pedidos.split(",")) + ")"
+      llave = serialization.load_pem_private_key(Path("rsa_key.p8").read_bytes(), password=None)
+      with snowflake.connector.connect(
+          account=os.environ["SNOWFLAKE_ACCOUNT"], user=os.environ["SNOWFLAKE_USER"],
+          role=os.environ["SNOWFLAKE_ROLE"], warehouse=os.environ["SNOWFLAKE_WAREHOUSE"],
+          database=os.environ["SNOWFLAKE_DATABASE"],
+          private_key=llave.private_bytes(serialization.Encoding.DER, serialization.PrivateFormat.PKCS8,
+                                          serialization.NoEncryption()),
+      ) as con:
+          cur = con.cursor(snowflake.connector.DictCursor)
+          cur.execute(f"""
+              SELECT LOTE_SIMULACION, SEMANA, DERIVA, NUMERO_DOCUMENTO, ESTILO, CEPA,
+                     {", ".join(c.upper() for c in ENTEROS + DECIMALES)}
+              FROM PRODUCCION.LOTES_SIMULACION
+              {filtro}
+              ORDER BY LOTE_SIMULACION, FECHA_COCCION, NUMERO_DOCUMENTO""")
+          filas = [{k.lower(): v for k, v in fila.items()} for fila in cur.fetchall()]
+      print(f"{len(filas)} lotes de cerveza leídos de PRODUCCION.LOTES_SIMULACION")
+      if not filas:
+          sys.exit("No hay lotes: ejecutar antes python -m src.cargar_lotes")
+
       por_lote = defaultdict(list)
       for fila in filas:
           por_lote[int(fila["lote_simulacion"])].append(fila)
 
-      pedidos = os.environ["LOTES"].strip().lower()
-      lotes = sorted(por_lote) if pedidos == "todos" else [int(x) for x in pedidos.split(",")]
-
+      # 2) Enviar cada lote a la API
       errores = 0
-      for lote in lotes:
-          aplicar, deriva = 0, por_lote[lote][0]["deriva"] == "1"
+      for lote in sorted(por_lote):
+          aplicar, deriva = 0, int(por_lote[lote][0]["deriva"]) == 1
           for fila in por_lote[lote]:
-              cuerpo = {"numero_documento": fila["numero_documento"], "estilo": fila["estilo"],
+              cuerpo = {"numero_documento": str(fila["numero_documento"]), "estilo": fila["estilo"],
                         "lote_simulacion": lote, "cepa": fila["cepa"]}
               cuerpo.update({c: numero(fila[c], True) for c in ENTEROS})
               cuerpo.update({c: numero(fila[c], False) for c in DECIMALES})
@@ -80,7 +106,7 @@ tasks:
               except urllib.error.HTTPError as e:
                   errores += 1
                   print(f"  ERROR lote {lote} orden {fila['numero_documento']}: {e.code} {e.read().decode()}")
-          print(f"Lote {lote:>2} | semana {por_lote[lote][0]['semana'][:10]} | "
+          print(f"Lote {lote:>2} | semana {str(por_lote[lote][0]['semana'])[:10]} | "
                 f"{len(por_lote[lote])} lotes de cerveza | {aplicar} con clarificante"
                 + ("  <- DERIVA INDUCIDA" if deriva else ""))
 
@@ -95,5 +121,5 @@ errors:
     message: |
       FALLA EN LA SIMULACIÓN DE PRODUCCIÓN
       Ejecución: {{ execution.id }} | Lotes: {{ inputs.lotes }}
-      Revisar que la API esté encendida ({{ inputs.api_url }}/salud).
-      
+      Revisar que la API esté encendida ({{ inputs.api_url }}/salud) y que exista
+      PRODUCCION.LOTES_SIMULACION en Snowflake (python -m src.cargar_lotes).
