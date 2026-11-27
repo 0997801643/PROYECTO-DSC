@@ -1,56 +1,222 @@
-# Registro de cambios del proyecto
+# Cambios
 
-Cada observación recibida en los PSets #1 a #3 y cada decisión que cambió respecto de un PSet anterior, con lo que se modificó y en qué archivo. "Documento técnico" se refiere al documento del PSet 4.
+Observaciones recibidas en los PSets 1 a 3 y decisiones que cambiaron respecto de un PSet anterior.
+"Documento técnico" es el memo del PSet 4.
 
-## 1. Observaciones del profesor
+- [Observaciones del PSet 1](#pset-1)
+- [Observaciones del PSet 2](#pset-2)
+- [Observaciones del PSet 3](#pset-3)
+- [Decisiones actualizadas](#decisiones-actualizadas)
 
-### PSet #1
+---
 
-| # | Criterio (nota) | Observación | Qué cambié | Archivo(s) |
-|---|---|---|---|---|
-| 1.1 | Comparación y selección (9) | Revisar el 18/18 de la Idea 2: el acceso al historial depende de la gerencia y los registros del proceso todavía deben recolectarse. | El riesgo se materializó en parte: el ERP solo tiene datos desde febrero de 2026 y los registros de proceso (temperatura, turbidez) no existen. El acceso real fue Medio, no Alto. Se documenta como limitación (pocos datos: 221 lotes en 10 meses). | Documento técnico, secciones 3 y 10 |
-| 1.2 | Problema y formulación (7.5) | Cuantificar los lotes que superan el 5 % de merma y los litros perdidos. | 149 de 221 lotes (67 %) superan el 5 %. En las 9 semanas de la simulación, los errores de no hacer nada cuestan 4.272 USD (94,93 USD por lote). | Documento técnico, secciones 1 y 9 |
-| 1.3 | Problema y formulación (7.5) | Justificar el umbral del 70 % con los costos de intervención y la meta de recall del 80 %. | El 70 % se reemplazó. En el PSet 3 el umbral se eligió por costo (0,05). En el PSet 4 se fija por el presupuesto de clarificante: k = 2 lotes por semana (umbral 0,6216). Ver "Decisiones actualizadas". | `src/preparar_api.py`; documento técnico, sección 1 |
-| 1.4 | Problema y formulación (7.5) | Eliminar el resultado esperado de la Idea 1 ("abastecimiento oportuno de clarificantes"). | El resultado esperado ahora es solo el de la Idea 2: menos costo de merma por lote, neto del clarificante innecesario. | Documento técnico, sección 1 |
-| 1.5 | Viabilidad técnica y de datos (8) | Unificar el período de datos: seis meses en el memo y de dos a tres años en el pitch. | Un solo período: febrero a octubre de 2026, porque el ERP solo tiene datos desde febrero. | Documento técnico, sección 1; presentación |
-| 1.6 | Viabilidad técnica y de datos (8) | Comprobar que existan suficientes lotes con merma superior al 5 %. | Hay 149 lotes con merma alta: la clase "alta" es incluso mayoritaria (67 %), por eso la métrica técnica es ROC-AUC. | Documento técnico, secciones 1 y 4 |
-| 1.7 | Viabilidad de negocio (8.5) | La comparación con períodos sin alertas debe controlar estilo, insumos y temporada. | La comparación se hace sobre los mismos lotes (mismo estilo, insumos y semana): cada política se evalúa con la merma real de cada lote. Además se reporta por cepa (sección 8). | `src/valor_negocio.py`, `src/analisis_final.py`; documento técnico, secciones 8 y 9 |
-| 1.8 | Alcance del semestre (9.5) | Definir criterios de aceptación del flujo semanal en Kestra. | Criterios: la ingesta termina sin error con 0 duplicados y la OBT valida filas = hechos; `produccion_lotes` deja una predicción por lote (alerta si falta alguna); `monitoreo` guarda todas las métricas del lote en `MONITOREO`. | `kestra/*.yml`, `src/monitoreo.py`; documento técnico, secciones 3 y 7 |
-| 1.9 | Pitch de negocio (6.5) | Eliminar los textos pendientes de la plantilla ([Apellido 1], [Agregar dato real…]). | La presentación del PSet 4 se hizo desde cero, sin textos de plantilla. | Presentación del PSet 4 |
-| 1.10 | Pitch de negocio (6.5) | Incluir el % de lotes con merma > 5 % o los litros perdidos por mes. | La presentación incluye el 67 % de lotes con merma alta y el costo semanal de no hacer nada. | Presentación del PSet 4 |
+## Observaciones
 
-### PSet #2
+### PSet 1
 
-| # | Criterio (nota) | Observación | Qué cambié | Archivo(s) |
-|---|---|---|---|---|
-| 2.1 | Kestra (7) | Agregar un bloque de errores (`errors`). | Se agregó el bloque `errors` con la tarea `alerta_falla_ingesta`, que registra en el log de Kestra (nivel ERROR) el flujo, la ejecución y la hora de inicio cuando una tarea falla después de agotar los 3 reintentos. Se probó provocando una falla (URL inexistente) y la alerta se disparó. | `kestra/ingesta.yml` |
-| 2.2 | Kestra (7) | Integrar dbt y Spark en Kestra; hoy ambas etapas se ejecutan a mano. | El flujo ahora corre de punta a punta: RAW → `dbt build` (Bronze, Silver, Gold y tests) → Spark (OBT). Una tarea `WorkingDirectory` clona el repositorio público y ejecuta dbt y Spark en contenedores Docker con las mismas imágenes del `docker-compose.yml`. Evidencia: 5 modelos y 28 tests en verde (PASS=33) y OBT de 221 filas validada. | `kestra/ingesta.yml` |
-| 2.3 | Calidad de datos (9) | Justificar por qué las dos mermas negativas se reemplazan por cero; antes, determinar qué representan esos valores. | Se revisaron en SAP: son errores de tipeo por lotes mezclados. La merma real no puede ser negativa; como el volumen real no se puede reconstruir, se ajusta el completado al planificado (merma 0 %) y se conservan los 2 lotes. | `dbt/models/intermedia/int_merma_limpia.sql`; documento técnico, sección 3 |
-| 2.4 | dbt (7) | Agregar tests que verifiquen las reglas de Silver, sobre todo la exclusión de órdenes abiertas y de productos sin levadura. | Se agregaron 3 tests singulares, uno por regla de Silver: sin órdenes abiertas (fecha de cierre nula o completado ≤ 0), sin productos sin levadura (Platonic, Turbo + Guaraná o cepa nula) y sin errores de registro (completado > planificado). Los tests pasaron de 25 a 28, todos en verde. | `dbt/tests/assert_silver_sin_ordenes_abiertas.sql`, `dbt/tests/assert_silver_sin_productos_sin_levadura.sql`, `dbt/tests/assert_silver_sin_errores_de_registro.sql` |
-| 2.5 | Star schema (7.5) | Ampliar la justificación del modelo dimensional considerando tanques, cepas y generaciones de levadura. | Se justifica en el documento: la cepa queda en `dim_estilo` porque en esta planta depende del estilo; la generación y el tanque cambian lote a lote, así que son atributos del hecho y no catálogos que se repitan. | Documento técnico, sección 3 |
-| 2.6 | Spark y OBT (8.5) | Documentar mejor la conciliación antes de publicar la OBT. | Se documentan las tres validaciones (221 filas en hechos = 221 en la OBT, 221 órdenes únicas, 0 filas sin estilo o fecha) y que el script se detiene sin escribir si alguna falla, conservando la última OBT válida. | `spark/build_obt.py`; documento técnico, sección 3 |
-| 2.7 | Infraestructura (8) | Quitar la referencia fija a la cuenta de Snowflake en los flows y pasarla a la configuración. | La cuenta, el usuario, el rol, el warehouse y la base de datos se movieron al `.env` como variables `ENV_SNOWFLAKE_*`; los flujos las leen con `{{ envs.* }}` y la llave privada sigue como secreto (`SECRET_SNOWFLAKE_PRIVATE_KEY`). Ningún flujo tiene credenciales escritas. `.env.example` documenta las variables sin valores. | `kestra/ingesta.yml`, `kestra/test_conexion_snowflake.yml`, `.env.example` |
-| 2.8 | Documento técnico (6.5) | Eliminar los textos pendientes de la plantilla. | El documento técnico del PSet 4 se escribió desde cero, sin textos de plantilla. | Documento técnico |
-| 2.9 | Documento técnico (6.5) | Completar la arquitectura, comparar estrella vs. OBT y explicar qué cambiaría para usar streaming. | La sección 2 tiene el diagrama completo (fuente → API → monitoreo → reentrenamiento). La sección 3 compara estrella (análisis) vs. OBT (modelo) y explica cuándo convendría streaming (sensores durante el filtrado). | Documento técnico, secciones 2 y 3 |
+#### 1.1 · Comparación y selección (9)
+- **Observación:** revisar el 18/18 de la Idea 2: el acceso al historial depende de la gerencia y los registros del proceso aún deben recolectarse.
+- **Cambio:** el riesgo se materializó en parte. El ERP solo tiene datos desde febrero de 2026 y no existen registros de proceso (temperatura, turbidez). El acceso real fue Medio, no Alto. Se documenta como limitación: 221 lotes en 10 meses.
+- **Archivos:** documento técnico, secciones 3 y 10.
 
-### PSet #3
+#### 1.2 · Problema y formulación (7.5)
+- **Observación:** cuantificar los lotes que superan el 5 % de merma y los litros perdidos.
+- **Cambio:** 149 de 221 lotes (67 %) superan el 5 %. En las 9 semanas de la simulación, no hacer nada cuesta 4.272 USD (94,93 USD por lote).
+- **Archivos:** documento técnico, secciones 1 y 9.
+
+#### 1.3 · Problema y formulación (7.5)
+- **Observación:** justificar el umbral del 70 % con los costos de intervención y la meta de recall del 80 %.
+- **Cambio:** el 70 % se reemplazó. PSet 3: umbral por costo (0,05). PSet 4: umbral por presupuesto de clarificante, k = 2 lotes por semana (0,6216). Ver [Umbral de decisión](#umbral-de-decisión).
+- **Archivos:** `src/preparar_api.py`; documento técnico, sección 1.
+
+#### 1.4 · Problema y formulación (7.5)
+- **Observación:** eliminar el resultado esperado de la Idea 1 ("abastecimiento oportuno de clarificantes").
+- **Cambio:** el único resultado esperado es el de la Idea 2: menos costo de merma por lote, neto del clarificante innecesario.
+- **Archivos:** documento técnico, sección 1.
+
+#### 1.5 · Viabilidad técnica y de datos (8)
+- **Observación:** unificar el período de datos (seis meses en el memo, dos a tres años en el pitch).
+- **Cambio:** un solo período, febrero a octubre de 2026, porque el ERP solo tiene datos desde febrero.
+- **Archivos:** documento técnico, sección 1; presentación.
+
+#### 1.6 · Viabilidad técnica y de datos (8)
+- **Observación:** comprobar que existan suficientes lotes con merma > 5 %.
+- **Cambio:** hay 149. La clase "alta" es mayoritaria (67 %); por eso la métrica técnica es ROC-AUC.
+- **Archivos:** documento técnico, secciones 1 y 4.
+
+#### 1.7 · Viabilidad de negocio (8.5)
+- **Observación:** la comparación con períodos sin alertas debe controlar estilo, insumos y temporada.
+- **Cambio:** cada política se evalúa sobre los mismos lotes (mismo estilo, insumos y semana) con su merma real. Además se reporta por cepa.
+- **Archivos:** `src/valor_negocio.py`, `src/analisis_final.py`; documento técnico, secciones 8 y 9.
+
+#### 1.8 · Alcance del semestre (9.5)
+- **Observación:** definir criterios de aceptación del flujo semanal en Kestra.
+- **Cambio:**
+  - `ingesta`: termina sin error, 0 duplicados y la OBT valida filas = hechos.
+  - `produccion_lotes`: una predicción por lote (alerta si falta alguna).
+  - `monitoreo`: guarda todas las métricas del lote en `MONITOREO`.
+- **Archivos:** `kestra/*.yml`, `src/monitoreo.py`; documento técnico, secciones 3 y 7.
+
+#### 1.9 · Pitch de negocio (6.5)
+- **Observación:** eliminar los textos pendientes de la plantilla (`[Apellido 1]`, `[Agregar dato real…]`).
+- **Cambio:** la presentación del PSet 4 se hizo desde cero.
+- **Archivos:** presentación del PSet 4.
+
+#### 1.10 · Pitch de negocio (6.5)
+- **Observación:** incluir el % de lotes con merma > 5 % o los litros perdidos por mes.
+- **Cambio:** la presentación incluye el 67 % de lotes con merma alta y el costo semanal de no hacer nada.
+- **Archivos:** presentación del PSet 4.
+
+### PSet 2
+
+#### 2.1 · Kestra (7)
+- **Observación:** agregar un bloque `errors`.
+- **Cambio:** tarea `alerta_falla_ingesta`, que registra en el log (nivel ERROR) el flujo, la ejecución y la hora cuando una tarea falla tras 3 reintentos. Probado con una URL inexistente.
+- **Archivos:** `kestra/ingesta.yml`.
+
+#### 2.2 · Kestra (7)
+- **Observación:** integrar dbt y Spark en Kestra; se ejecutaban a mano.
+- **Cambio:** el flujo corre de punta a punta: RAW → `dbt build` → Spark (OBT). Una tarea `WorkingDirectory` clona el repositorio y ejecuta dbt y Spark en contenedores con las mismas imágenes del compose. Evidencia: 5 modelos y 28 tests en verde (PASS=33), OBT de 221 filas validada.
+- **Archivos:** `kestra/ingesta.yml`.
+
+#### 2.3 · Calidad de datos (9)
+- **Observación:** determinar qué representan las dos mermas negativas y justificar su reemplazo por cero.
+- **Cambio:** revisadas en SAP: errores de tipeo por lotes mezclados. Como el volumen real no se puede reconstruir, el completado se ajusta al planificado (merma 0 %) y se conservan los 2 lotes.
+- **Archivos:** `dbt/models/intermedia/int_merma_limpia.sql`; documento técnico, sección 3.
+
+#### 2.4 · dbt (7)
+- **Observación:** agregar tests de las reglas de Silver, sobre todo órdenes abiertas y productos sin levadura.
+- **Cambio:** 3 tests singulares (de 25 a 28, todos en verde):
+  - sin órdenes abiertas (fecha de cierre nula o completado ≤ 0);
+  - sin productos sin levadura (Platonic, Turbo + Guaraná o cepa nula);
+  - sin errores de registro (completado > planificado).
+- **Archivos:** `dbt/tests/assert_silver_sin_ordenes_abiertas.sql`, `dbt/tests/assert_silver_sin_productos_sin_levadura.sql`, `dbt/tests/assert_silver_sin_errores_de_registro.sql`.
+
+#### 2.5 · Star schema (7.5)
+- **Observación:** ampliar la justificación del modelo dimensional con tanques, cepas y generaciones de levadura.
+- **Cambio:** la cepa queda en `dim_estilo` porque en esta planta depende del estilo; la generación y el tanque cambian lote a lote, así que son atributos del hecho.
+- **Archivos:** documento técnico, sección 3.
+
+#### 2.6 · Spark y OBT (8.5)
+- **Observación:** documentar mejor la conciliación antes de publicar la OBT.
+- **Cambio:** tres validaciones (221 filas en hechos = 221 en la OBT, 221 órdenes únicas, 0 filas sin estilo o fecha). Si alguna falla, el script se detiene sin escribir y conserva la última OBT válida.
+- **Archivos:** `spark/build_obt.py`; documento técnico, sección 3.
+
+#### 2.7 · Infraestructura (8)
+- **Observación:** quitar la cuenta de Snowflake escrita en los flows.
+- **Cambio:** cuenta, usuario, rol, warehouse y base de datos pasan al `.env` como `ENV_SNOWFLAKE_*` (`{{ envs.* }}`); la llave sigue como secreto. `.env.example` documenta las variables sin valores.
+- **Archivos:** `kestra/ingesta.yml`, `kestra/test_conexion_snowflake.yml`, `.env.example`.
+
+#### 2.8 · Documento técnico (6.5)
+- **Observación:** eliminar los textos pendientes de la plantilla.
+- **Cambio:** el documento técnico del PSet 4 se escribió desde cero.
+- **Archivos:** documento técnico.
+
+#### 2.9 · Documento técnico (6.5)
+- **Observación:** completar la arquitectura, comparar estrella vs. OBT y explicar qué cambiaría con streaming.
+- **Cambio:** diagrama completo (fuente → API → monitoreo → reentrenamiento); comparación estrella (análisis) vs. OBT (modelo); streaming convendría con sensores durante el filtrado.
+- **Archivos:** documento técnico, secciones 2 y 3.
+
+### PSet 3
 
 Calificación 100/100, sin observaciones.
 
-## 2. Decisiones actualizadas
+---
 
-| Decisión | Antes (PSet) | Ahora | Por qué | Archivos actualizados |
-|---|---|---|---|---|
-| Horizonte | Al terminar la fermentación (PSet #1) | Día de la cocción (PSet #3 y #4) | Deja de 3 a 5 días para conseguir y dosificar el clarificante antes del filtrado, y ninguna feature usa información posterior a la cocción. | `src/pipeline.py`; documento técnico, sección 1 |
-| Umbral de decisión | Probabilidad > 70 % (PSet #1) → 0,05 por costo (PSet #3) | Presupuesto de k = 2 lotes por semana: umbral 0,6216, guardado como tag `umbral_decision` de la versión del modelo | El 0,05 equivalía a clarificar casi todos los lotes. En planta el clarificante tiene un presupuesto semanal; k = 1 era demasiado restrictivo para ~6 cocciones por semana. | `src/preparar_api.py`, `api/main.py`, `src/reentrenar.py` |
-| Línea base de negocio | "Siempre clarificante" y "nunca clarificante" (PSet #3) | Regla por **estilo**: clarificar Belgian Tripel, Honey Bock, Iguana, Oktoberfest y Red Llama (23 % de los lotes); y "no hacer nada" | Es la regla que aplicaría un jefe de producción con el mismo presupuesto. Se arma por estilo y no por cepa: la cepa es una feature del modelo y el estilo es como la planta organiza la producción. | `src/preparar_api.py`, `api/linea_base.json` |
-| Métrica técnica | Recall (meta 80 %) y precisión (PSet #1) | ROC-AUC (PSet #3) | Con 67 % de lotes altos, "siempre alta" logra F1 0,79 sin aprender; ROC-AUC mide si el modelo ordena bien el riesgo, que es lo que usa el presupuesto k = 2. | `src/pipeline.py` |
-| Métrica de negocio | Merma promedio y litros perdidos por mes (PSet #1) | Costo de errores por lote (USD) (PSet #3) | Pone en la misma unidad (USD) los dos errores: cerveza perdida y clarificante desperdiciado. | `src/pipeline.py`, `src/monitoreo.py`, `src/valor_negocio.py` |
-| Período de datos | 6 meses (memo) / 2–3 años (pitch) (PSet #1) | Febrero–octubre 2026 | El ERP solo tiene datos desde febrero. | Documento técnico, sección 1 |
-| Regla de promoción | No existía | El challenger se recomienda si ahorra más de 1 desviación estándar del costo de la CV del champion (20,87 USD por lote) y no pierde más de 1 desviación de ROC-AUC (0,123); la decisión final es humana | Con 221 lotes, una mejora menor que la variación entre pliegues es ruido. | `src/reentrenar.py`, `kestra/reentrenamiento.yml` |
-| Estructura del repo | PSet 2 en la raíz y `pset_3/` en el repositorio `PSET2` | Todo en `proyecto_final/`, en el repositorio renombrado `PROYECTO-DSC` | El PSet 4 exige un solo proyecto en `proyecto_final/` con un solo `docker-compose.yml`. Se unieron los dos `docker-compose`, los dos `.env` y se conservaron los volúmenes existentes (Model Registry y flujos de Kestra). | Todo el repositorio; `docker-compose.yml`, `src/datos.py`, `.gitignore`, `kestra/ingesta.yml` (URL del CSV) |
-| Alertas de deriva de datos | PSI > 0,25 con KS/chi² p < 0,05 en todas las variables, salvo las de calendario (primera versión del PSet #4: 31 alertas) | El PSI alerta solo en las variables con peso en el modelo (`generacion_levadura`); la deriva de las demás se mide y se guarda sin alertar. Nulos, fuera de rango y cepas nuevas siguen alertando en todas | `con_microscopio` alertaba en los 10 lotes porque el microscopio se compró en agosto (171 de 176 lotes de entrenamiento sin él), pero su coeficiente en el modelo es 0: su deriva no cambia ninguna predicción y es información sin valor para decidir. Lo mismo vale para la carga de planta; su cambio en el lote con deriva lo detecta igual la alerta de "fuera de rango". | `src/monitoreo.py` |
-| Disparo del reentrenamiento | Manual o por calendario mensual | Por métrica: `monitoreo` lanza `reentrenamiento` cuando el ROC-AUC de 2 lotes etiquetados seguidos queda bajo la media de la CV − 2 desv. (0,389). La deriva de datos sola no dispara | El PDF pide un flujo disparado por métrica, y reentrenar solo tiene sentido si cae el desempeño. | `src/monitoreo.py`, `kestra/monitoreo.yml` |
-| Ejecución del monitoreo | A mano después de cada lote | Trigger de tipo Flow (`dependsOn`) cada vez que `produccion_lotes` termina bien | Ningún lote queda sin monitorear. | `kestra/monitoreo.yml` |
-| Imágenes del compose | `api-merma:local` y `tablero-merma:local`, construidas en local | `ghcr.io/0997801643/api-merma:${IMAGEN_TAG}` y `tablero-merma:${IMAGEN_TAG}`, las que publica el CD con el hash del commit | El compose debe usar la imagen publicada. Los flujos de Kestra siguen usando `api-merma:local` como imagen de trabajo para sus scripts de Python. | `docker-compose.yml`, `.github/workflows/cd.yml` |
-| Tablero | Alertas y métricas por lote | Además muestra los reentrenamientos (leídos de MLflow) con el lote que los disparó, y el ROC-AUC por lote frente al límite de la CV | El PDF pide que el tablero muestre alertas y reentrenamientos. | `monitoreo/tablero.py`, `docker-compose.yml` |
+## Decisiones actualizadas
+
+### Horizonte
+- **Antes:** al terminar la fermentación (PSet 1).
+- **Ahora:** día de la cocción (PSets 3 y 4).
+- **Por qué:** deja de 3 a 5 días para conseguir y dosificar el clarificante, y ninguna feature usa información posterior a la cocción.
+- **Archivos:** `src/pipeline.py`; documento técnico, sección 1.
+
+### Umbral de decisión
+- **Antes:** probabilidad > 70 % (PSet 1) → 0,05 por costo (PSet 3).
+- **Ahora:** presupuesto de k = 2 lotes por semana → umbral 0,6216, guardado como tag `umbral_decision` de la versión del modelo.
+- **Por qué:** 0,05 equivalía a clarificar casi todos los lotes. En planta el clarificante tiene presupuesto semanal; k = 1 era muy restrictivo para ~6 cocciones por semana.
+- **Archivos:** `src/preparar_api.py`, `api/main.py`, `src/reentrenar.py`.
+
+### Línea base de negocio
+- **Antes:** "siempre clarificante" y "nunca clarificante" (PSet 3).
+- **Ahora:** regla por estilo (clarificar Belgian Tripel, Honey Bock, Iguana, Oktoberfest y Red Llama: 23 % de los lotes) y "no hacer nada".
+- **Por qué:** es la regla que aplicaría un jefe de producción con el mismo presupuesto. Es por estilo y no por cepa porque la cepa es una feature del modelo y el estilo es como la planta organiza la producción.
+- **Archivos:** `src/preparar_api.py`, `api/linea_base.json`.
+
+### Métrica técnica
+- **Antes:** recall (meta 80 %) y precisión (PSet 1).
+- **Ahora:** ROC-AUC (PSet 3).
+- **Por qué:** con 67 % de lotes altos, "siempre alta" logra F1 0,79 sin aprender. ROC-AUC mide si el modelo ordena bien el riesgo, que es lo que usa el presupuesto k = 2.
+- **Archivos:** `src/pipeline.py`.
+
+### Métrica de negocio
+- **Antes:** merma promedio y litros perdidos por mes (PSet 1).
+- **Ahora:** costo de errores por lote en USD (PSet 3).
+- **Por qué:** pone en la misma unidad los dos errores: cerveza perdida y clarificante desperdiciado.
+- **Archivos:** `src/pipeline.py`, `src/monitoreo.py`, `src/valor_negocio.py`.
+
+### Período de datos
+- **Antes:** 6 meses (memo) / 2–3 años (pitch) (PSet 1).
+- **Ahora:** febrero–octubre 2026.
+- **Por qué:** el ERP solo tiene datos desde febrero.
+- **Archivos:** documento técnico, sección 1.
+
+### Regla de promoción
+- **Antes:** no existía.
+- **Ahora:** el challenger se recomienda si ahorra más de 1 desv. estándar del costo en la CV del champion (20,87 USD por lote) y no pierde más de 1 desv. de ROC-AUC (0,123). La decisión final es humana.
+- **Por qué:** con 221 lotes, una mejora menor que la variación entre pliegues es ruido.
+- **Archivos:** `src/reentrenar.py`, `kestra/reentrenamiento.yml`.
+
+### Estructura del repositorio
+- **Antes:** PSet 2 en la raíz y `pset_3/` en el repositorio `PSET2`.
+- **Ahora:** todo en `proyecto_final/`, en el repositorio `PROYECTO-DSC`.
+- **Por qué:** el PSet 4 exige un solo proyecto con un solo `docker-compose.yml`. Se unieron los dos compose y los dos `.env`, conservando los volúmenes (Model Registry y flujos de Kestra).
+- **Archivos:** `docker-compose.yml`, `src/datos.py`, `.gitignore`, `kestra/ingesta.yml` (URL del CSV).
+
+### Alertas de deriva de datos
+- **Antes:** PSI > 0,25 con KS/chi² p < 0,05 en todas las variables salvo las de calendario (31 alertas en la primera versión).
+- **Ahora:** el PSI alerta solo en las variables con peso en el modelo (`generacion_levadura`). La deriva de las demás se mide sin alertar. Nulos, fuera de rango y cepas nuevas alertan en todas.
+- **Por qué:** `con_microscopio` alertaba en los 10 lotes (el microscopio se compró en agosto: 171 de 176 lotes de entrenamiento sin él), pero su coeficiente es 0 y su deriva no cambia ninguna predicción. Lo mismo con `carga_planta_14d`; su cambio en el lote con deriva lo detecta la alerta de fuera de rango. Verificado en el notebook 07 (tabla de coeficientes).
+- **Archivos:** `src/monitoreo.py`, `notebooks/07_analisis_monitoreo.ipynb`.
+
+### Disparo del reentrenamiento
+- **Antes:** manual o por calendario mensual.
+- **Ahora:** por métrica. `monitoreo` lanza `reentrenamiento` cuando el ROC-AUC de 2 lotes etiquetados seguidos queda bajo media CV − 2 desv. (0,389). La deriva de datos sola no dispara.
+- **Por qué:** reentrenar solo tiene sentido si cae el desempeño.
+- **Archivos:** `src/monitoreo.py`, `kestra/monitoreo.yml`.
+
+### Ejecución del monitoreo
+- **Antes:** a mano después de cada lote.
+- **Ahora:** trigger de tipo Flow (`dependsOn`) cada vez que `produccion_lotes` termina bien.
+- **Por qué:** ningún lote queda sin monitorear.
+- **Archivos:** `kestra/monitoreo.yml`.
+
+### Imágenes del compose
+- **Antes:** `api-merma:local` y `tablero-merma:local`, construidas en local.
+- **Ahora:** `ghcr.io/0997801643/api-merma:${IMAGEN_TAG}` y `tablero-merma:${IMAGEN_TAG}`, publicadas por el CD con el hash del commit.
+- **Por qué:** el compose debe usar la imagen publicada. Kestra sigue usando `api-merma:local` para sus scripts de Python.
+- **Archivos:** `docker-compose.yml`, `.github/workflows/cd.yml`.
+
+### Métricas de sistema
+- **Antes:** latencia p50/p95, respaldo y predicciones faltantes, calculadas desde `PREDICCIONES`.
+- **Ahora:** además, volumen de solicitudes y tasa de errores 4xx (alerta > 5 %) y 5xx (alerta > 0 %) por lote. La API guarda cada solicitud en `PRODUCCION.SOLICITUDES` (ruta, código, latencia y lote del encabezado `X-Lote-Simulacion`).
+- **Por qué:** una solicitud rechazada nunca llega a `PREDICCIONES`. Un 422 ocasional es normal (error de digitación); más de 1 de cada 20 indica un cambio en el envío o en el esquema. Un 500 nunca debería ocurrir.
+- **Archivos:** `api/registro.py`, `api/main.py`, `kestra/produccion_lotes.yml`, `src/monitoreo.py`, `src/exportar_evidencia.py`, `monitoreo/tablero.py`, `tests/test_contrato.py`.
+
+### Revisión del alias en la API
+- **Antes:** cada 30 s, dentro de la primera solicitud que llegaba (su latencia incluía la consulta a MLflow).
+- **Ahora:** un hilo de fondo revisa el alias cada 30 s; las predicciones nunca consultan MLflow.
+- **Por qué:** en la primera simulación hubo predicciones aisladas de 2 a 8 s con medianas por lote de 18 a 95 ms; esto elimina la causa más probable. `POST /recargar` sigue aplicando un rollback al instante.
+- **Archivos:** `api/main.py`.
+
+### Severidad de `roc_auc_lote`
+- **Antes:** sin plantilla; sus alertas salían sin severidad, responsable ni acción.
+- **Ahora:** Alta · analista de datos · si se repite 2 lotes seguidos, el monitoreo lanza el reentrenamiento con aprobación humana.
+- **Por qué:** es la alerta que dispara el reentrenamiento.
+- **Archivos:** `src/exportar_evidencia.py`.
+
+### Tablero
+- **Antes:** alertas y métricas por lote.
+- **Ahora:** además, los reentrenamientos (leídos de MLflow) con el lote que los disparó, el ROC-AUC por lote frente al límite de la CV, y los errores 4xx/5xx y el volumen por lote.
+- **Por qué:** el PDF pide que el tablero muestre alertas y reentrenamientos.
+- **Archivos:** `monitoreo/tablero.py`, `docker-compose.yml`.

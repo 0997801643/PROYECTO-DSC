@@ -5,7 +5,13 @@ Pruebas de contrato de la API (sección 3.1 del PSet 4).
 2. Falta un campo → 422 que dice qué campo falló.
 3. Tipo incorrecto → 422.
 4. Categoría desconocida → 422.
+5. Una entrada rechazada (422) queda registrada con su código y su lote de simulación,
+   que es de donde el monitoreo calcula la tasa de errores 4xx y 5xx.
 """
+import json
+import os
+from pathlib import Path
+
 CAMPOS_RESPUESTA = {
     "id_prediccion", "timestamp", "numero_documento", "probabilidad", "decision", "accion",
     "version_modelo", "run_id", "umbral", "respaldo", "motivo_respaldo", "latencia_ms",
@@ -52,3 +58,15 @@ def test_categoria_desconocida_devuelve_422(cliente, lote_valido):
     r = cliente.post("/predecir", json=lote_valido)
     assert r.status_code == 422
     assert "cepa" in campos_con_error(r)
+
+
+# 5. El rechazo queda registrado para el monitoreo (errores 4xx por lote)
+def test_rechazo_queda_registrado_con_codigo_y_lote(cliente, lote_valido):
+    lote_valido["coccion_mes"] = 13                     # mes imposible
+    r = cliente.post("/predecir", json=lote_valido, headers={"X-Lote-Simulacion": "7"})
+    assert r.status_code == 422
+    archivo = Path(os.environ["RUTA_REGISTROS"]) / "solicitudes.jsonl"
+    ultima = json.loads(archivo.read_text(encoding="utf-8").strip().splitlines()[-1])
+    assert ultima["ruta"] == "/predecir"
+    assert ultima["codigo"] == 422
+    assert ultima["lote_simulacion"] == 7
