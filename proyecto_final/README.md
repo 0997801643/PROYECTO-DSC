@@ -16,7 +16,7 @@ SAP (CSV) → Kestra → RAW → dbt (Bronze → Silver → Gold) → Spark (OBT
 
 ```
 proyecto_final/
-├── docker-compose.yml        # Postgres, Kestra, MLflow, API, tablero (+ dbt y Spark en el perfil "manual")
+├── docker-compose.yml        # Postgres, Kestra, Spark, MLflow, API y tablero (+ dbt y spark-obt en el perfil "manual")
 ├── .env.example              # variables necesarias, sin valores
 ├── requirements.txt          # entorno local (notebooks y scripts)
 ├── api/                      # servicio de predicción (FastAPI + Dockerfile)
@@ -30,7 +30,7 @@ proyecto_final/
 │   └── test_conexion_snowflake.yml
 ├── dbt/                      # Bronze, Silver, Gold y tests
 ├── spark/build_obt.py        # construye y valida la OBT
-├── notebooks/                # EDA, features, candidatos, tuning, selección (PSet 3)
+├── notebooks/                # 01–05 (PSet 3), 06 simulación y 07 monitoreo (PSet 4)
 ├── src/
 │   ├── datos.py, pipeline.py           # carga de la OBT y Pipeline de scikit-learn
 │   ├── preparar_api.py                 # umbral k = 2, línea base y fixtures de CI
@@ -38,7 +38,8 @@ proyecto_final/
 │   ├── monitoreo.py                    # métricas de datos, modelo, desempeño, sistema y negocio
 │   ├── reentrenar.py                   # challenger, comparación y regla de promoción
 │   ├── valor_negocio.py, analisis_final.py   # cifras de las secciones 8 y 9
-├── tests/                    # pytest (contrato, modelo, negocio, respaldo)
+│   ├── exportar_evidencia.py           # CSV de evidencia en docs/
+├── tests/                    # test_contrato.py, test_modelo.py, test_comportamiento.py
 ├── data/                     # fuente CSV, snapshot de la OBT, lotes de simulación
 └── docs/                     # cambios.md, memos anteriores, SQL de calidad, figuras
 ```
@@ -63,15 +64,18 @@ uv pip install -r requirements.txt
 Ejecutar `docs/snowflake_setup.sql` en Snowflake (base de datos, esquemas, rol).
 
 **1. Levantar la infraestructura**
+
+En `.env` también van `POSTGRES_PASSWORD` y `KESTRA_ADMIN_PASSWORD` (ver `.env.example`).
 ```bash
 docker build -f api/Dockerfile -t api-merma:local .
 docker build -f monitoreo/Dockerfile -t tablero-merma:local .
+docker tag api-merma:local ghcr.io/0997801643/api-merma:latest
+docker tag tablero-merma:local ghcr.io/0997801643/tablero-merma:latest
 docker compose up -d
 ```
-Kestra: http://localhost:8080 · MLflow: http://localhost:5050 · API: http://localhost:8000/docs · Tablero: http://localhost:8501
+El compose levanta Postgres, Kestra, Spark, MLflow, la API y el tablero. La API y el tablero usan las imágenes que publica el CD en GHCR con el tag `IMAGEN_TAG`, que es el hash del commit (por defecto `latest`): `IMAGEN_TAG=<hash> docker compose pull` y luego `IMAGEN_TAG=<hash> docker compose up -d`. Los `docker tag` de arriba sirven para usar las imágenes construidas en local. Spark se levanta y verifica su instalación; el trabajo que construye la OBT lo ejecuta Kestra en cada ingesta, con la misma imagen (a mano: `docker compose --profile manual run --rm spark-obt`). Los flujos de Kestra corren sus tareas de Python con la imagen `api-merma:local`.
 
-Las imágenes también se publican en GHCR en cada push a `main` con CI en verde:
-`ghcr.io/0997801643/api-merma:<commit>` y `ghcr.io/0997801643/tablero-merma:<commit>`.
+Kestra: http://localhost:8080 · MLflow: http://localhost:5050 · API: http://localhost:8000/docs · Tablero: http://localhost:8501
 
 **2. Fuente → Raw → Bronze → Silver → Gold → OBT**
 En Kestra, crear los flujos de `kestra/` (namespace `cerveceria.pset2`) y ejecutar `ingesta_merma_raw`. El flujo carga RAW, corre `dbt build` (modelos + tests) y Spark, que valida y publica `CERVECERIA_DB.OBT.OBT_MERMA_LOTES`.
@@ -96,18 +100,24 @@ En Kestra, ejecutar `produccion_lotes` (lotes = `todos`). Las predicciones queda
 ```bash
 python -m src.monitoreo --crear-referencia     # una vez: distribución del entrenamiento
 ```
-En Kestra, ejecutar `monitoreo`. Las métricas quedan en `PRODUCCION.MONITOREO` y las alertas en el log; el tablero las muestra en http://localhost:8501.
+`monitoreo` corre solo cada vez que termina bien `produccion_lotes` (trigger de tipo Flow); también se puede ejecutar a mano. Las métricas quedan en `PRODUCCION.MONITOREO` y las alertas en el log; el tablero las muestra en http://localhost:8501. Si el ROC-AUC por lote cae bajo media − 2 desv. de la CV en 2 lotes etiquetados seguidos, `monitoreo` lanza `reentrenamiento` con ese motivo.
+
+La lógica de deriva (PSI, KS, chi²) y de alertas vive en `src/monitoreo.py` (en lugar de `monitoreo/deriva.py` y `monitoreo/alertas.py`), porque Kestra la ejecuta clonando el repositorio. La carpeta `monitoreo/` contiene el tablero, que además lee de MLflow los reentrenamientos y muestra el lote que disparó cada uno.
+
+Reglas de alerta de datos: el PSI alerta solo si la prueba KS o chi² confirma el cambio (p < 0,05) y solo en las variables con peso en el modelo (`generacion_levadura`; `temporada_alta` es de calendario). La deriva de las demás, como `con_microscopio`, se mide y se guarda sin alertar. La calidad de datos (nulos, fuera de rango, cepas nuevas) alerta en todas las variables.
 
 **7. Reentrenamiento, rollback y respaldo**
 - Kestra → `reentrenamiento` (input `motivo`): entrena el challenger, se pausa y espera **Resume** con "promover" o "rechazar".
 - Kestra → `rollback_modelo`: devuelve `@champion` a la versión anterior; comprobar en http://localhost:8000/modelo.
 - Interruptor de respaldo: `MODO_RESPALDO=1 docker compose up -d api` (volver: `docker compose up -d api`).
 
-**8. Cifras del documento**
+**8. Cifras del documento, evidencia y notebooks de producción**
 ```bash
 python -m src.valor_negocio
 python -m src.analisis_final
+python -m src.exportar_evidencia      # docs/predicciones, monitoreo, alertas, corridas, reentrenamientos (.csv)
 ```
+Luego ejecutar `notebooks/06_simulacion_produccion.ipynb` y `07_analisis_monitoreo.ipynb` (Restart y Run All).
 
 ## Seguridad
 

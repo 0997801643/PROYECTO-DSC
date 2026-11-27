@@ -70,7 +70,7 @@ services:
     build:
       context: .
       dockerfile: api/Dockerfile
-    image: ghcr.io/0997801643/api-merma:latest
+    image: ghcr.io/0997801643/api-merma:${IMAGEN_TAG:-latest}   # IMAGEN_TAG = hash del commit publicado por el CD
     env_file: .env
     environment:
       MLFLOW_TRACKING_URI: http://mlflow:5000        # red interna de Docker
@@ -91,10 +91,11 @@ services:
     build:
       context: .
       dockerfile: monitoreo/Dockerfile
-    image: ghcr.io/0997801643/tablero-merma:latest
+    image: ghcr.io/0997801643/tablero-merma:${IMAGEN_TAG:-latest}
     env_file: .env
     environment:
       SNOWFLAKE_PRIVATE_KEY_PATH: /keys/rsa_key.p8
+      MLFLOW_TRACKING_URI: http://mlflow:5000        # para leer los reentrenamientos
     volumes:
       - ./keys:/keys:ro
     ports:

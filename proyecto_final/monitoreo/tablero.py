@@ -2,11 +2,16 @@
 Tablero de monitoreo (sección 6.2 del PSet 4).
 
 Lee de Snowflake la tabla PRODUCCION.MONITOREO (la llena el flujo de Kestra "monitoreo") y
-muestra, lote por lote: alertas, negocio, desempeño, modelo, datos y sistema.
+muestra, lote por lote: alertas, reentrenamientos, negocio, desempeño, modelo, datos y sistema.
+Los reentrenamientos se leen del servidor de MLflow (corridas con fase = reentrenamiento).
 
 Se abre en http://localhost:8501 (servicio "tablero" del docker-compose).
 """
+import json
 import os
+import re
+import urllib.parse
+import urllib.request
 from pathlib import Path
 
 import pandas as pd
@@ -36,6 +41,53 @@ def cargar_monitoreo():
     df["valor"] = pd.to_numeric(df["valor"], errors="coerce")
     df["lote"] = df["lote_simulacion"].astype(int)
     return df
+
+
+@st.cache_data(ttl=60)
+def cargar_reentrenamientos():
+    """Corridas de reentrenamiento desde la API REST de MLflow (sin instalar mlflow en la imagen)."""
+    base = os.environ.get("MLFLOW_TRACKING_URI", "http://mlflow:5000").rstrip("/")
+    experimento = os.environ.get("MLFLOW_EXPERIMENT", "merma-cerveza")
+
+    def pedir(ruta, cuerpo=None):
+        datos = json.dumps(cuerpo).encode() if cuerpo is not None else None
+        req = urllib.request.Request(base + ruta, data=datos, headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            return json.load(r)
+
+    exp_id = pedir("/api/2.0/mlflow/experiments/get-by-name?experiment_name="
+                   + urllib.parse.quote(experimento))["experiment"]["experiment_id"]
+    corridas = pedir("/api/2.0/mlflow/runs/search", {"experiment_ids": [exp_id],
+                     "filter": "tags.fase = 'reentrenamiento'", "max_results": 100}).get("runs", [])
+    versiones = pedir("/api/2.0/mlflow/model-versions/search?filter="
+                      + urllib.parse.quote("name='merma-cerveza-modelo'")).get("model_versions", [])
+    por_run = {v["run_id"]: v for v in versiones}
+
+    filas = []
+    for c in corridas:
+        tags = {t["key"]: t["value"] for t in c["data"].get("tags", [])}
+        met = {m["key"]: m["value"] for m in c["data"].get("metrics", [])}
+        version = por_run.get(c["info"]["run_id"], {})
+        tags_v = {t["key"]: t["value"] for t in version.get("tags", [])}
+        motivo = tags.get("motivo_disparo", "")
+        lote = re.search(r"detectado en el lote (\d+)", motivo)
+        if "rechazado_por" in tags_v:
+            decision = f"rechazado por {tags_v['rechazado_por']}"
+        elif "aprobado_por" in tags_v:
+            decision = f"promovido por {tags_v['aprobado_por']}"
+        else:
+            decision = "sin decisión registrada"
+        filas.append({
+            "fecha": pd.to_datetime(c["info"]["start_time"], unit="ms"),
+            "lote que lo disparó": int(lote.group(1)) if lote else None,
+            "versión challenger": version.get("version"),
+            "motivo": motivo,
+            "recomendación": tags.get("recomendacion", ""),
+            "decisión": decision,
+            "costo/lote champion (USD)": met.get("champion_costo_por_lote"),
+            "costo/lote challenger (USD)": met.get("challenger_costo_por_lote"),
+        })
+    return pd.DataFrame(filas).sort_values("fecha", ascending=False) if filas else pd.DataFrame()
 
 
 def serie(df, tipo, metrica, variable=""):
@@ -69,6 +121,21 @@ st.subheader("Alertas")
 st.dataframe(alertas[["lote", "tipo", "metrica", "variable", "valor", "umbral", "detalle"]]
              .sort_values(["lote", "tipo"]), hide_index=True, use_container_width=True)
 
+# --- Reentrenamientos ---
+st.subheader("Reentrenamientos")
+try:
+    reent = cargar_reentrenamientos()
+except Exception as e:  # MLflow apagado: el resto del tablero sigue funcionando
+    reent = None
+    st.info(f"No se pudo leer MLflow ({e}).")
+if reent is not None:
+    if reent.empty:
+        st.caption("Todavía no hay reentrenamientos.")
+    else:
+        st.caption("Corridas con fase = reentrenamiento en MLflow. El lote es el lote de simulación "
+                   "en el que el monitoreo pidió reentrenar (vacío = disparo manual o por calendario).")
+        st.dataframe(reent.round(2), hide_index=True, use_container_width=True)
+
 # --- Negocio y desempeño ---
 izq, der = st.columns(2)
 with izq:
@@ -87,8 +154,16 @@ with der:
 
 izq, der = st.columns(2)
 with izq:
-    st.subheader("Desempeño: ROC-AUC acumulado")
-    st.line_chart(pd.DataFrame({"ROC-AUC": serie(df, "desempeno", "roc_auc"), "azar (0,5)": 0.5}))
+    st.subheader("Desempeño: ROC-AUC acumulado y por lote")
+    st.caption("Por lote: cada valor se ubica en el lote al que pertenece la merma real. Límite: media de la "
+               "CV del PSet 3 − 2 desv. (0,389); 2 lotes seguidos bajo el límite disparan el reentrenamiento.")
+    por_lote = df[(df["tipo"] == "desempeno") & (df["metrica"] == "roc_auc_lote")].copy()
+    por_lote["lote_etiqueta"] = por_lote["variable"].str.extract(r"(\d+)").astype(float)
+    st.line_chart(pd.DataFrame({
+        "ROC-AUC acumulado": serie(df, "desempeno", "roc_auc"),
+        "ROC-AUC del lote": por_lote.set_index("lote_etiqueta")["valor"].sort_index(),
+        "límite (0,389)": 0.389,
+    }))
 with der:
     st.subheader("Modelo: probabilidad media y % con clarificante")
     st.line_chart(pd.DataFrame({

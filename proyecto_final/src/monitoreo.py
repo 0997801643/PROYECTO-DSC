@@ -49,6 +49,11 @@ CATEGORICAS = ["levadura_nueva", "sin_generacion", "con_microscopio", "temporada
 # Variables de calendario: en producción SIEMPRE llegan meses posteriores al entrenamiento, así que
 # su cambio de distribución es esperado. Se miden y se guardan, pero no disparan alerta.
 CALENDARIO = ["coccion_mes", "temporada_alta"]
+# Variables con peso en el modelo en producción (coeficiente distinto de 0 en la logística L1 v1):
+# solo su deriva puede cambiar las predicciones. La deriva de las demás (por ejemplo con_microscopio,
+# que cambió porque el microscopio se compró en agosto) se mide y se guarda, pero no alerta.
+# La calidad de datos (nulos, fuera de rango, cepas nuevas) sí alerta en todas las variables.
+CON_PESO_EN_MODELO = ["generacion_levadura", "temporada_alta"]
 
 K_LOTES_SEMANA = 2          # presupuesto de clarificante (lotes por semana)
 RETRASO_ETIQUETAS = 2       # la merma real se conoce 2 semanas después de la cocción
@@ -255,6 +260,9 @@ def metricas_lote(lote, pred, ref, sim, linea_base):
         if cambio and v in CALENDARIO:
             agregar("datos", "psi", valor_psi, UMBRAL["psi"], False, v,
                     f"p = {p:.4f}: cambio esperado (variable de calendario, no alerta)")
+        elif cambio and v not in CON_PESO_EN_MODELO:
+            agregar("datos", "psi", valor_psi, UMBRAL["psi"], False, v,
+                    f"p = {p:.4f}: cambio confirmado, pero la variable no tiene peso en el modelo (no alerta)")
         else:
             agregar("datos", "psi", valor_psi, UMBRAL["psi"], cambio, v,
                     f"p = {p:.4f}: cambio de distribución confirmado" if cambio else f"p = {p:.4f}")
@@ -302,8 +310,12 @@ def metricas_lote(lote, pred, ref, sim, linea_base):
         # Métrica técnica DEL LOTE que acaba de recibir su etiqueta, contra la CV del PSet 3
         roc_lote = roc_auc_lote(pred, sim, hasta)
         if not np.isnan(roc_lote):
+            # El valor es del lote `hasta` (su merma llegó ahora), no del lote que se monitorea:
+            # se guarda con variable = "lote N" para que quede claro a qué lote pertenece.
             agregar("desempeno", "roc_auc_lote", roc_lote, LIMITE_ROC_LOTE, roc_lote < LIMITE_ROC_LOTE,
-                    detalle=f"lote {hasta}; CV del PSet 3: {CV_ROC_MEDIA} ± {CV_ROC_STD} (límite media − 2 desv.)")
+                    variable=f"lote {hasta}",
+                    detalle=f"ROC-AUC del lote {hasta} (su merma real se conoció al monitorear el lote {lote}); "
+                            f"CV del PSet 3: {CV_ROC_MEDIA} ± {CV_ROC_STD}, límite media − 2 desv.")
     else:
         agregar("desempeno", "sin_etiquetas", None,
                 detalle=f"la merma real llega {RETRASO_ETIQUETAS} semanas después")
