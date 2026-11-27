@@ -1724,3 +1724,33 @@ c5c0ba6c-d4f2-4228-baee-07393e390a20,2026-11-27 20:11:42.359197+00:00,1509,10.0,
   ""sin_generacion"": 0,
   ""temporada_alta"": 0
 }",0.494039,no_aplicar,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,23.45
+ec81a154-b965-41a8-b1a3-a24f234b746f,2026-11-27 21:06:43.257063+00:00,1516,9.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 1,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 1,
+  ""levadura_nueva"": 0,
+  ""lote_simulacion"": 9,
+  ""n_cocciones"": 4,
+  ""numero_documento"": ""1516"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.621602,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,1123.48
+a7fb310e-40d0-420a-9726-10c128421df4,2026-11-27 21:06:44.234094+00:00,1518,9.0,"{
+  ""carga_planta_14d"": 11,
+  ""cepa"": ""W34/70"",
+  ""coccion_dia_semana"": 2,
+  ""coccion_mes"": 10,
+  ""con_microscopio"": 1,
+  ""estilo"": ""American Lager"",
+  ""generacion_levadura"": 0,
+  ""levadura_nueva"": 1,
+  ""lote_simulacion"": 9,
+  ""n_cocciones"": 2,
+  ""numero_documento"": ""1518"",
+  ""sin_generacion"": 0,
+  ""temporada_alta"": 0
+}",0.651674,aplicar_clarificante,1,e96be0e9960b47bf836869be8483a3c8,0.621602,False,,254.2
