@@ -68,8 +68,11 @@ tasks:
                         "lote_simulacion": lote, "cepa": fila["cepa"]}
               cuerpo.update({c: numero(fila[c], True) for c in ENTEROS})
               cuerpo.update({c: numero(fila[c], False) for c in DECIMALES})
+              # X-Lote-Simulacion: la API lo guarda en PRODUCCION.SOLICITUDES para calcular
+              # el volumen y los errores 4xx y 5xx de cada lote (también de las que fallan)
               pedido = urllib.request.Request(URL, data=json.dumps(cuerpo).encode(),
-                                              headers={"Content-Type": "application/json"})
+                                              headers={"Content-Type": "application/json",
+                                                       "X-Lote-Simulacion": str(lote)})
               try:
                   with urllib.request.urlopen(pedido, timeout=30) as r:
                       resp = json.loads(r.read())
