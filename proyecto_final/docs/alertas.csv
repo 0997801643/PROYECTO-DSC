@@ -1,17 +1,17 @@
 fecha_ejecucion,lote_simulacion,tipo,metrica,variable,valor,umbral,alerta,detalle,severidad,quien_la_recibe,accion
-2026-11-27 21:09:10.294867+00:00,1,modelo,psi_probabilidad,probabilidad,5.56354,0.25,True,p = 0.0085,Media,Analista de datos,Revisar junto con la deriva de las features
-2026-11-27 21:09:10.294867+00:00,1,sistema,latencia_p95_ms,,1464.6625,500.0,True,,Baja,Soporte de la API,Revisar arranque en frío y recursos
-2026-11-27 21:09:10.294867+00:00,2,modelo,psi_probabilidad,probabilidad,5.216115,0.25,True,p = 0.0020,Media,Analista de datos,Revisar junto con la deriva de las features
-2026-11-27 21:09:10.294867+00:00,2,negocio,clarificantes_semana,,5.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
-2026-11-27 21:09:10.294867+00:00,3,negocio,clarificantes_semana,,5.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
-2026-11-27 21:09:10.294867+00:00,5,negocio,clarificantes_semana,,3.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
-2026-11-27 21:09:10.294867+00:00,6,negocio,clarificantes_semana,,3.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
-2026-11-27 21:09:10.294867+00:00,7,negocio,clarificantes_semana,,4.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
-2026-11-27 21:09:10.294867+00:00,8,datos,pct_nulos,generacion_levadura,0.5,0.2,True,,Media,Responsable de la bitácora,Completar el registro en planta
-2026-11-27 21:09:10.294867+00:00,8,datos,pct_nulos,levadura_nueva,0.5,0.2,True,,Media,Responsable de la bitácora,Completar el registro en planta
-2026-11-27 21:09:10.294867+00:00,9,desempeno,roc_auc_lote,lote 7,0.25,0.389,True,"ROC-AUC del lote 7 (su merma real se conoció al monitorear el lote 9); CV del PSet 3: 0.635 ± 0.123, límite media − 2 desv.",Alta,Analista de datos,"Si se repite 2 lotes seguidos, el monitoreo lanza el reentrenamiento con aprobación humana"
-2026-11-27 21:09:10.294867+00:00,9,sistema,latencia_p95_ms,,1080.016,500.0,True,,Baja,Soporte de la API,Revisar arranque en frío y recursos
-2026-11-27 21:09:10.294867+00:00,10,datos,pct_fuera_rango,carga_planta_14d,1.0,0.2,True,"rango del entrenamiento [0, 15]",Alta,Analista de datos y jefe de producción,No usar el modelo esa semana; decidir con la regla por estilo
-2026-11-27 21:09:10.294867+00:00,10,datos,psi,generacion_levadura,8.020864,0.25,True,p = 0.0001: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
-2026-11-27 21:09:10.294867+00:00,10,desempeno,roc_auc_lote,lote 8,0.0,0.389,True,"ROC-AUC del lote 8 (su merma real se conoció al monitorear el lote 10); CV del PSet 3: 0.635 ± 0.123, límite media − 2 desv.",Alta,Analista de datos,"Si se repite 2 lotes seguidos, el monitoreo lanza el reentrenamiento con aprobación humana"
-2026-11-27 21:09:10.294867+00:00,10,modelo,psi_probabilidad,probabilidad,8.698598,0.25,True,p = 0.0000,Media,Analista de datos,Revisar junto con la deriva de las features
+2026-11-28 00:58:07.916349+00:00,1,modelo,psi_probabilidad,probabilidad,5.56354,0.25,True,p = 0.0085,Media,Analista de datos,Revisar junto con la deriva de las features
+2026-11-28 00:58:07.916349+00:00,1,sistema,latencia_p95_ms,,1464.6625,500.0,True,,Baja,Soporte de la API,Revisar arranque en frío y recursos
+2026-11-28 00:58:07.916349+00:00,2,modelo,psi_probabilidad,probabilidad,5.216115,0.25,True,p = 0.0020,Media,Analista de datos,Revisar junto con la deriva de las features
+2026-11-28 00:58:07.916349+00:00,2,negocio,clarificantes_semana,,5.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
+2026-11-28 00:58:07.916349+00:00,3,negocio,clarificantes_semana,,5.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
+2026-11-28 00:58:07.916349+00:00,5,negocio,clarificantes_semana,,3.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
+2026-11-28 00:58:07.916349+00:00,6,negocio,clarificantes_semana,,3.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
+2026-11-28 00:58:07.916349+00:00,7,negocio,clarificantes_semana,,4.0,2.0,True,presupuesto: 2 por semana,Media,Jefe de producción,Aplicar solo a los 2 lotes de mayor probabilidad
+2026-11-28 00:58:07.916349+00:00,8,datos,pct_nulos,generacion_levadura,0.5,0.2,True,,Media,Responsable de la bitácora,Completar el registro en planta
+2026-11-28 00:58:07.916349+00:00,8,datos,pct_nulos,levadura_nueva,0.5,0.2,True,,Media,Responsable de la bitácora,Completar el registro en planta
+2026-11-28 00:58:07.916349+00:00,9,desempeno,roc_auc_lote,lote 7,0.25,0.389,True,"ROC-AUC del lote 7 (su merma real se conoció al monitorear el lote 9); CV del PSet 3: 0.635 ± 0.123, límite media − 2 desv.",Alta,Analista de datos,"Si se repite 2 lotes seguidos, el monitoreo lanza el reentrenamiento con aprobación humana"
+2026-11-28 00:58:07.916349+00:00,9,sistema,latencia_p95_ms,,1080.016,500.0,True,,Baja,Soporte de la API,Revisar arranque en frío y recursos
+2026-11-28 00:58:07.916349+00:00,10,datos,pct_fuera_rango,carga_planta_14d,1.0,0.2,True,"rango del entrenamiento [0, 15]",Alta,Analista de datos y jefe de producción,No usar el modelo esa semana; decidir con la regla por estilo
+2026-11-28 00:58:07.916349+00:00,10,datos,psi,generacion_levadura,8.020864,0.25,True,p = 0.0001: cambio de distribución confirmado,Media,Analista de datos,"Revisar la fuente; si el desempeño también cae, reentrenar"
+2026-11-28 00:58:07.916349+00:00,10,desempeno,roc_auc_lote,lote 8,0.0,0.389,True,"ROC-AUC del lote 8 (su merma real se conoció al monitorear el lote 10); CV del PSet 3: 0.635 ± 0.123, límite media − 2 desv.",Alta,Analista de datos,"Si se repite 2 lotes seguidos, el monitoreo lanza el reentrenamiento con aprobación humana"
+2026-11-28 00:58:07.916349+00:00,10,modelo,psi_probabilidad,probabilidad,8.698598,0.25,True,p = 0.0000,Media,Analista de datos,Revisar junto con la deriva de las features
